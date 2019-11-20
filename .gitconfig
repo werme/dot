@@ -1,0 +1,56 @@
+[user]
+  name = Olle Werme
+  email = olle.werme@gmail.com
+[hub]
+  protocol = https
+[alias]
+  st = status
+  df = diff
+  ci = commit
+  co = checkout
+  br = branch
+  cp = cherry-pick
+  cps = cherry-pick -s
+  shrug = commit -m '¯\\_(ツ)_/¯'
+  flip = commit -m '(╯°□°)╯︵ ┻━┻'
+  
+  plo = pull origin
+  pso = push origin
+  
+  psom = push origin master
+  plom = pull origin master
+  psod = push origin develop
+  plod = pull origin develop
+  
+  sl = log --decorate --pretty=oneline --abbrev-commit --all
+  slog = log --decorate --pretty=oneline --abbrev-commit --all
+  l = log --color --graph --decorate --pretty=format:'%C(yellow)%h%Creset -%C(blue)%d%Creset %s %C(cyan)(%cr) %C(magenta)<%an>%Creset' --abbrev-commit --all
+  lg = log --color --graph --decorate --pretty=format:'%C(yellow)%h%Creset -%C(blue)%d%Creset %s %C(cyan)(%cr) %C(magenta)<%an>%Creset' --abbrev-commit --all
+  
+  brsort = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
+  
+  forgot = !git add . && git commit --amend --no-edit
+  amend = commit --amend --no-edit
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  ui = true
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+[core]
+  excludesfile = ~/.gitignore_global
+  editor = nvim
+  pager = diff-so-fancy | less --tabs=4 -RFX
+[apply]
+  whitespace = fix
+[mergetool]
+  keepBackup = false
+[difftool]
+  prompt = false
+[help]
+  autocorrect = 1
+[push]
+  default = simple
