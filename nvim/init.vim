@@ -47,8 +47,7 @@ Plug 'rakr/vim-two-firewatch'
 Plug 'sheerun/vim-polyglot' " Language packs
 Plug 'pangloss/vim-javascript' " Some extra for js configurability
 Plug 'airblade/vim-gitgutter'
-Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'dir': '~/lib/fzf', 'do': './install --all'  }
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/goyo.vim'
@@ -58,7 +57,6 @@ Plug 'tpope/vim-fugitive' " Git
 Plug 'tpope/vim-unimpaired'
 Plug 'jiangmiao/auto-pairs' " Closes brackets etc, it's nice
 Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
-Plug 'junegunn/vim-peekaboo'
 Plug 'rbong/vim-flog'
 Plug 'farmergreg/vim-lastplace'
 Plug 'christoomey/vim-tmux-navigator'
