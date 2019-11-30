@@ -30,7 +30,7 @@ set ignorecase
 
 set mouse=a " Enable the mouse in all modes
 
-set termguicolors " True colors for colorscheme
+" set termguicolors " True colors for colorscheme
 
 " Firewatch theme supports 'light' looking pretty good as well
 set background=dark
@@ -47,7 +47,8 @@ Plug 'rakr/vim-two-firewatch'
 Plug 'sheerun/vim-polyglot' " Language packs
 Plug 'pangloss/vim-javascript' " Some extra for js configurability
 Plug 'airblade/vim-gitgutter'
-Plug 'junegunn/fzf', { 'dir': '~/lib/fzf', 'do': './install --all'  }
+Plug '~/lib/fzf' " fzf includes a vim command
+Plug 'junegunn/fzf.vim' " This extends it with some more commands
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/goyo.vim'
@@ -63,7 +64,7 @@ Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
 
 syntax on
-colorscheme two-firewatch
+" colorscheme two-firewatch
 
 let g:javascript_plugin_flow = 1
 
@@ -108,7 +109,7 @@ command! CD :cd %:p:h
 
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
-  \   'rg --hidden --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>),
+  \   'rg --hidden --column --line-number --no-heading --smart-case '.shellescape(<q-args>),
   \   1,
   \   fzf#vim#with_preview(),
   \   <bang>0)
@@ -129,8 +130,9 @@ map <Space> <Leader>
 
 " better ESC
 tnoremap <Esc> <C-\><C-n>
-tnoremap jj <C-\><C-n>
-inoremap jj <Esc>
+" tnoremap jj <C-\><C-n>
+" inoremap jj <Esc>
+inoremap fd <Esc>
 
 nmap <Leader>d :copy .<CR>
 vmap <Leader>d :copy '><CR>
@@ -154,10 +156,12 @@ nmap <Leader>b :NERDTreeToggle<CR>
 
 nmap <silent> <Leader>g :Prettier<CR>
 
-noremap Y "*y
+" Yank to *
+noremap Y "*y 
+" Make 'Enter' clear search highlight
 nnoremap <CR> :noh<CR><CR>
 
-"Find and replace
+" Find and replace
 map <leader>sr :%s///g<left><left>
 
 " " Use `[c` and `]c` to navigate diagnostics
