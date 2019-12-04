@@ -30,7 +30,7 @@ set ignorecase
 
 set mouse=a " Enable the mouse in all modes
 
-" set termguicolors " True colors for colorscheme
+set termguicolors " True colors for colorscheme
 
 " Firewatch theme supports 'light' looking pretty good as well
 set background=dark
@@ -64,11 +64,9 @@ Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
 
 syntax on
-" colorscheme two-firewatch
+colorscheme two-firewatch
 
 let g:javascript_plugin_flow = 1
-
-" let g:gutentags_file_list_command = 'rg --files'
 
 let g:closetag_filetypes = 'js,javascript.jsx'
 let g:closetag_filenames = '*.js'
