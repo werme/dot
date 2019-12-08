@@ -1,4 +1,9 @@
-;; -*- lexical-binding: t; -*-
+;;; init.el --- Initialization file for Emacs  -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Emacs Startup File --- initialization for Emacs
+;;; Package --- Summary
+;;; Code:
+
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 ;; (eval-and-compile
