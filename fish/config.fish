@@ -21,6 +21,7 @@ alias alacrittyconfig="v ~/.config/alacritty/alacritty.yml"
 alias tmux="env TERM=screen-256color tmux -u"
 alias tx="tmux"
 alias emacs="env TERM=screen-256color emacs"
+alias em="emacs"
 alias vs="v -S ~/.vim/sessions/Prev.vim"
 alias fd="fdfind"
 
