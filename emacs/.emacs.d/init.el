@@ -363,61 +363,10 @@
 (setq before-save-hook 'nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-(use-package telephone-line
+(use-package doom-modeline
   :config
-  ;; (setq telephone-line-primary-left-separator 'telephone-line-cubed-left)
-  ;;       ;; telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
-  ;;       ;; telephone-line-primary-right-separator 'telephone-line-cubed-right
-  ;;       ;; telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
-  ;; (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
-  ;;       telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
-  ;;       telephone-line-primary-right-separator 'telephone-line-cubed-right
-  ;;       telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
-  ;; (setq telephone-line-primary-left-separator 'telephone-line-gradient
-  ;;       telephone-line-secondary-left-separator 'telephone-line-nil
-  ;;       telephone-line-primary-right-separator 'telephone-line-gradient
-  ;;       telephone-line-secondary-right-separator 'telephone-line-nil)
-  ;; (setq telephone-line-height 24
-  ;;       telephone-line-evil-use-short-tag t)
-
-  ;; (telephone-line-defsegment my-vc-info ()
-  ;; (when vc-mode
-  ;; (cond
-  ;; ((string-match "Git[:-]" vc-mode)
-  ;; (let ((branch (mapconcat 'concat (cdr (split-string vc-mode "[:-]")) "-")))
-  ;; (concat "" (format " %s" branch))))
-  ;; ((string-match "SVN-" vc-mode)
-  ;; (let ((revision (cadr (split-string vc-mode "-"))))
-  ;; (concat "" (format "SVN-%s" revision))))
-  ;; (t (format "%s" vc-mode)))))
-
-  ;; (telephone-line-defsegment* my-airline-position-segment (&optional lines columns)
-  ;;   (let* ((l (number-to-string (if lines lines 1)))
-  ;;          (c (number-to-string (if columns columns 2))))
-  ;;     (if (eq major-mode 'paradox-menu-mode)
-  ;;         (telephone-line-raw mode-line-front-space t)
-  ;;         (concat " " "%" l "l:%" c "c"))))
-
-  ;; (setq telephone-line-lhs
-  ;;       '((evil   . (telephone-line-evil-tag-segment))
-  ;;         (accent . (my-vc-info
-  ;;                    telephone-line-process-segment))
-  ;;         (nil    . (telephone-line-buffer-segment
-  ;;                    telephone-line-projectile-segment))))
-  ;; (setq telephone-line-rhs
-  ;;       '((nil    . (telephone-line-flycheck-segment
-  ;;                    telephone-line-misc-info-segment))
-  ;;         (accent . (telephone-line-major-mode-segment))
-  ;;         (nil    . (telephone-line-hud-segment
-  ;;                    my-airline-position-segment))))
-
-  ;; (setq display-time-format "%b %d %a %R")
-  ;; (setq display-time-default-load-average nil)
-  ;; (setq display-time-use-mail-icon t)
-  ;; (setq display-time-mail-file t)
-  ;; (display-time-mode t)
-
-  (telephone-line-mode 1))
+  (setq doom-modeline-unicode-fallback t)
+  :hook (after-init . doom-modeline-mode))
 
 (use-package spacemacs-common
   :ensure spacemacs-theme
