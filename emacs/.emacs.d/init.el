@@ -16,6 +16,11 @@
       scroll-conservatively 101
       ispell-program-name "aspell")
 
+(setq inhibit-startup-screen t)
+(setq initial-scratch-message "")
+(setq enable-recursive-minibuffers t)
+(setq-default indent-tabs-mode nil)
+
 (with-eval-after-load 'display-line-numbers
   (setq display-line-numbers-type 'relative
         display-line-numbers-width-start t))
@@ -36,6 +41,7 @@
 (blink-cursor-mode 0)
 (winner-mode 1)
 (put 'narrow-to-region 'disabled nil)
+(prefer-coding-system 'utf-8)
 
 
 (setq package-enable-at-startup nil)
@@ -218,20 +224,20 @@
 ;;   :load-path "~/.emacs.d/private/deadgrep"
 ;;   :bind* (("C-c /" . deadgrep)))
 
-;; (use-package company
-;;   :hook (after-init . global-company-mode)
-;;   :config
-;;   (define-key company-active-map (kbd "M-n") nil)
-;;   (define-key company-active-map (kbd "M-p") nil)
-;;   (define-key company-active-map (kbd "C-n") #'company-select-next-or-abort)
-;;   (define-key company-active-map (kbd "C-p") #'company-select-previous-or-abort)
-;;   (setq company-frontends '(company-echo-metadata-frontend
-;;                             company-pseudo-tooltip-unless-just-one-frontend
-;;                             company-preview-frontend))
-;;   (setq company-backends '((company-capf
-;;                             company-files)
-;;                            (company-dabbrev-code company-keywords)
-;;                             company-dabbrev company-yasnippet)))
+(use-package company
+  :hook (after-init . global-company-mode)
+  :config
+  (define-key company-active-map (kbd "M-n") nil)
+  (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "C-n") #'company-select-next-or-abort)
+  (define-key company-active-map (kbd "C-p") #'company-select-previous-or-abort)
+  (setq company-frontends '(company-echo-metadata-frontend
+                            company-pseudo-tooltip-unless-just-one-frontend
+                            company-preview-frontend))
+  (setq company-backends '((company-capf
+                            company-files)
+                           (company-dabbrev-code company-keywords)
+                           company-dabbrev company-yasnippet)))
 
 ;; (use-package company-quickhelp
 ;;   :defer 5
@@ -246,16 +252,22 @@
   :commands lsp)
 
 (use-package lsp-ui
-  :hook (js-mode . lsp-ui-mode)
-  :commands lsp-ui-mode)
+  :commands lsp-ui-mode
+  :config
+  (flycheck-add-next-checker 'lsp-ui 'javascript-eslint)
+  (setq lsp-ui-doc-enable nil
+        lsp-ui-peek-enable nil
+        lsp-ui-sideline-enable nil
+        lsp-ui-imenu-enable nil
+        lsp-ui-flycheck-enable t))
 
-;; (use-package company-lsp
-;;   :after company
-;;   :commands company-lsp
-;;   :config (add-to-list 'company-backends 'company-lsp))
+(use-package company-lsp
+  :after company
+  :commands company-lsp
+  :config (add-to-list 'company-backends 'company-lsp))
 
 ;; (use-package swiper)
-  ;; :bind* ("M-s" . swiper))
+;; :bind* ("M-s" . swiper))
 
 (use-package counsel
   ;; :commands (counsel-load-theme
@@ -286,7 +298,7 @@
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
+  (setq ivy-initial-inputs-alist nil)
   (setq ivy-re-builders-alist
         '((swiper . ivy--regex-plus)
           (t      . ivy--regex-ignore-order))))
@@ -294,8 +306,8 @@
 
 
 (use-package counsel-projectile)
-  ;; :after (projectile)
-  ;; :hook projectile-mode)
+;; :after (projectile)
+;; :hook projectile-mode)
 
 (use-package projectile
   :commands (projectile-mode)
@@ -304,7 +316,7 @@
     "p"     '(:ignore t :which-key "projectile")
     "p SPC" 'counsel-projectile
     "pd"    'counsel-projectile-find-dir
-    "ps"    'counsel-projectile-project-switch
+    "ps"    'counsel-projectile-switch-project
     "pf"    'counsel-projectile-find-file
     "pg"    'counsel-projectile-rg
     "pb"    'counsel-projectile-switch-to-buffer)
@@ -323,23 +335,34 @@
 ;;   ;;   "zs" 'helm-flyspell-correct
 ;;   ;;   "z=" 'flyspell-buffer))
 
-;; (use-package flycheck
-;;   :commands (flycheck-mode)
-;;   :general
-;;   (tyrant-def
-;;    "e"   '(:ignore t :which-key "Errors")
-;;    "en"  'flycheck-next-error
-;;    "ep"  'flycheck-previous-error))
+(eval-after-load 'js-mode
+  '(add-hook 'js-mode-hook #'add-node-modules-path))
+
+(use-package flycheck
+  :commands (flycheck-mode)
+  :config
+  (global-flycheck-mode)
+  :general
+  (tyrant-def
+    "e"  '(:ignore t :which-key "Errors")
+    "]"  'flycheck-next-error
+    "["  'flycheck-previous-error
+    "en" 'flycheck-next-error
+    "ep" 'flycheck-previous-error
+    "ee" 'counsel-flycheck))
 
 (use-package magit
   :commands (magit-status)
   :general
   (tyrant-def
     "g"   '(:ignore t :which-key "git")
-    "gs"  'magit-status))
+    "gs"  'magit-status
+    "gg"  'magit-status))
 
 (use-package evil-magit
   :hook (magit-mode . evil-magit-init))
+
+(use-package yasnippet)
 
 (use-package shell-pop
   :commands (shell-pop)
@@ -356,7 +379,8 @@
   (show-paren-mode)
   (whitespace-mode)
   (electric-pair-mode)
-  ;; (flycheck-mode)
+  (yas-global-mode 1)
+  (flycheck-mode)
   (display-line-numbers-mode))
 
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
@@ -368,9 +392,8 @@
   (setq doom-modeline-unicode-fallback t)
   :hook (after-init . doom-modeline-mode))
 
-(use-package spacemacs-common
-  :ensure spacemacs-theme
-  :config (load-theme 'spacemacs-dark t))
+(use-package doom-themes
+  :config (load-theme 'doom-one t))
 
 (eval-when-compile
   (setq-default custom-file (expand-file-name "custom.el"
