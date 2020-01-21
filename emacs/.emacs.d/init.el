@@ -44,18 +44,18 @@
 (prefer-coding-system 'utf-8)
 
 
-(setq package-enable-at-startup nil)
+;; (setq package-enable-at-startup nil)
 (let ((default-directory "~/.emacs.d/elpa"))
   (normal-top-level-add-subdirs-to-load-path))
-(package-initialize t)
+(package-initialize)
 
 (unless (package-installed-p 'use-package) ; unless it is already installed
   (package-refresh-contents) ; updage packages archive
-  (package-install 'use-package) ; and install the most recent version of use-package
-  (setq use-package-always-ensure t))
+  (package-install 'use-package)) ; and install the most recent version of use-package
 
 (eval-when-compile
-  (require 'use-package))
+  (require 'use-package)
+  (setq use-package-always-ensure t))
 
 (use-package package
   :config
@@ -247,6 +247,19 @@
 ;;   :defer 5
 ;;   :config (company-statistics-mode))
 
+(use-package flycheck
+  :commands (flycheck-mode)
+  :config
+  (global-flycheck-mode)
+  :general
+  (tyrant-def
+    "e"  '(:ignore t :which-key "Errors")
+    "]"  'flycheck-next-error
+    "["  'flycheck-previous-error
+    "en" 'flycheck-next-error
+    "ep" 'flycheck-previous-error
+    "ee" 'counsel-flycheck))
+
 (use-package lsp-mode
   :hook (js-mode . lsp)
   :commands lsp)
@@ -338,18 +351,8 @@
 (eval-after-load 'js-mode
   '(add-hook 'js-mode-hook #'add-node-modules-path))
 
-(use-package flycheck
-  :commands (flycheck-mode)
-  :config
-  (global-flycheck-mode)
-  :general
-  (tyrant-def
-    "e"  '(:ignore t :which-key "Errors")
-    "]"  'flycheck-next-error
-    "["  'flycheck-previous-error
-    "en" 'flycheck-next-error
-    "ep" 'flycheck-previous-error
-    "ee" 'counsel-flycheck))
+(use-package prettier-js
+  :hook (js-mode . prettier-js-mode))
 
 (use-package magit
   :commands (magit-status)
@@ -386,6 +389,8 @@
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 (setq before-save-hook 'nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(use-package add-node-modules-path)
 
 (use-package doom-modeline
   :config
