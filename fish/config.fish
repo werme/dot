@@ -23,7 +23,6 @@ alias tx="tmux"
 alias emacs="env TERM=screen-256color emacs"
 alias em="emacs"
 alias vs="v -S ~/.vim/sessions/Prev.vim"
-alias fd="fdfind"
 
 set -x EDITOR "nvim"
 set -x FZF_DEFAULT_COMMAND "fd --hidden --exclude={.git,node_modules} --type f"
