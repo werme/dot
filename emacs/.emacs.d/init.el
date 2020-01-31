@@ -19,6 +19,7 @@
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message "")
 (setq enable-recursive-minibuffers t)
+(setq column-number-mode t)
 (setq-default indent-tabs-mode nil)
 
 (with-eval-after-load 'display-line-numbers
@@ -183,8 +184,8 @@
     "wh"  'evil-window-left
     "wl"  'evil-window-right
     "wj"  'evil-window-down
-    "wk"  'evil-window-up))
-                                        ; "bN"  'evil-buffer-new
+    "wk"  'evil-window-up
+    "bn"  'evil-buffer-new))
                                         ; "fd"  'evil-save-and-close)
                                         ; ('motion override-global-map
                                         ;   "]b"  'evil-next-buffer
@@ -231,6 +232,9 @@
   (define-key company-active-map (kbd "M-p") nil)
   (define-key company-active-map (kbd "C-n") #'company-select-next-or-abort)
   (define-key company-active-map (kbd "C-p") #'company-select-previous-or-abort)
+  (setq company-minimum-prefix-length 2)
+  (setq company-idle-delay 0)
+  (setq company-dabbrev-downcase nil)
   (setq company-frontends '(company-echo-metadata-frontend
                             company-pseudo-tooltip-unless-just-one-frontend
                             company-preview-frontend))
@@ -247,9 +251,15 @@
 ;;   :defer 5
 ;;   :config (company-statistics-mode))
 
+(set-face-attribute 'hl-line nil :background "#3f3f3f")
+
 (use-package flycheck
   :commands (flycheck-mode)
   :config
+  ;; (setq flycheck-highlighting-mode 'lines)
+  (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled))
+  ;; (set-face-attribute 'flycheck-error nil :background "red")
+  ;; (set-face-attribute 'flycheck-warning nil :background "yellow")
   (global-flycheck-mode)
   :general
   (tyrant-def
@@ -258,11 +268,14 @@
     "["  'flycheck-previous-error
     "en" 'flycheck-next-error
     "ep" 'flycheck-previous-error
-    "ee" 'counsel-flycheck))
+    "ee" 'counsel-flycheck
+    "bc" 'flycheck-buffer))
 
 (use-package lsp-mode
   :hook (js-mode . lsp)
-  :commands lsp)
+  :commands lsp
+  :config
+  (setq lsp-prefer-flymake nil))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
@@ -279,8 +292,11 @@
   :commands company-lsp
   :config (add-to-list 'company-backends 'company-lsp))
 
-;; (use-package swiper)
-;; :bind* ("M-s" . swiper))
+(use-package swiper
+  :commands swiper
+  :general
+  (tyrant-def
+    "s" 'swiper))
 
 (use-package counsel
   ;; :commands (counsel-load-theme
@@ -332,9 +348,10 @@
     "ps"    'counsel-projectile-switch-project
     "pf"    'counsel-projectile-find-file
     "pg"    'counsel-projectile-rg
-    "pb"    'counsel-projectile-switch-to-buffer)
+    "pb"    'counsel-projectile-switch-to-buffer
+    "j"     'counsel-projectile-find-file)
   :init
-  (setq projectile-project-search-path '("~/dev/" "~/kry/" "~/.config/"))
+  (setq projectile-project-search-path '("~/dev/" "~/kry/code/" "~/.config/"))
   :config
   (projectile-mode 1)
   (setq projectile-switch-project-action 'projectile-dired)
@@ -347,6 +364,11 @@
 ;;   ;;   :states '(normal visual)
 ;;   ;;   "zs" 'helm-flyspell-correct
 ;;   ;;   "z=" 'flyspell-buffer))
+
+(use-package exec-path-from-shell
+  :init (exec-path-from-shell-initialize))
+
+(use-package add-node-modules-path)
 
 (eval-after-load 'js-mode
   '(add-hook 'js-mode-hook #'add-node-modules-path))
@@ -367,6 +389,11 @@
 
 (use-package yasnippet)
 
+(use-package transpose-frame
+  :commands (transpose-frame)
+  :general
+  (tyrant-def "wt" 'transpose-frame))
+
 (use-package shell-pop
   :commands (shell-pop)
   :config (setq shell-pop-shell-type '("shell"
@@ -376,6 +403,11 @@
   (tyrant-def "'" 'shell-pop))
 
 (setq whitespace-style '(face trailing))
+
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
 
 (defun my-prog-mode-hook ()
   (auto-fill-mode)
@@ -390,7 +422,6 @@
 (setq before-save-hook 'nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-(use-package add-node-modules-path)
 
 (use-package doom-modeline
   :config
@@ -398,7 +429,10 @@
   :hook (after-init . doom-modeline-mode))
 
 (use-package doom-themes
-  :config (load-theme 'doom-one t))
+  :config
+  (setq doom-themes-enable-bold t)
+  (setq doom-themes-enable-italic t)
+  (load-theme 'doom-one t))
 
 (eval-when-compile
   (setq-default custom-file (expand-file-name "custom.el"
@@ -407,11 +441,14 @@
   (when (file-exists-p custom-file)
     (load custom-file)))
 
-                                        ; (eval-and-compile
-                                        ; (add-hook 'emacs-startup-hook '(lambda ()
-                                        ;                 (setq gc-cons-threshold 16777216
-                                        ;                         gc-cons-percentage 0.1
-                                        ;                         file-name-handler-alist temp--file-name-handler-alist))))
-                                        ; (setq initial-scratch-message (concat "Startup time: " (emacs-init-time)))
+;; (eval-and-compile
+;;   (add-hook 'emacs-startup-hook '(lambda ()
+;;                                    (setq gc-cons-threshold 16777216
+;;                                          gc-cons-percentage 0.1
+;;                                          file-name-handler-alist
+;;                                          temp--file-name-handler-alist))))
+
+(setq initial-scratch-message (concat "Startup time: " (emacs-init-time)))
+
 (provide 'init)
 ;;; init ends here
