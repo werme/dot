@@ -104,25 +104,24 @@
     ;; Quit operations
     "q"	  '(:ignore t :which-key "quit emacs")
     "qq"  'kill-emacs
-                                        ;    "qz"  'delete-frame
 
     ;; Buffer operations
     "b"   '(:ignore t :which-key "buffer")
     "bb"  'mode-line-other-buffer
     "bd"  'kill-this-buffer
-                                        ;    "b]"  'next-buffer
-                                        ;    "b["  'previous-buffer
+    "bn"  'next-buffer
+    "bp"  'previous-buffer
     "bq"  'kill-buffer-and-window
-                                        ;    "bR"  'rename-file-and-buffer
-                                        ;    "br"  'revert-buffer
+    "br"  'revert-buffer
 
     ;; Window operations
     "w"   '(:ignore t :which-key "window")
     "wo"  'maximize-window
     "wx"  'split-window-horizontally
     "ws"  'split-window-vertically
-                                        ;    "wu"  'winner-undo
-                                        ;    "ww"  'other-window
+    "wu"  'winner-undo
+    "wr"  'winner-redo
+    "ww"  'ace-window
     "wd"  'delete-window
     "wD"  'delete-other-windows
 
@@ -134,7 +133,7 @@
     "feR" 'load-user-init-file
     "fj"  'dired-jump
     "fl"  'find-file-literally
-                                        ;    "fR"  'rename-file-and-buffer
+    "fr"  'rename-file
     "fs"  'save-buffer
 
     ;; Applications
@@ -152,7 +151,7 @@
     "G"   'doc-view-last-page
     "C-d" 'doc-view-scroll-up-or-next-page
     "C-f" 'doc-view-scroll-up-or-next-page
-    "C-b" 'doc-view-scroll-down-or-previous-page)
+    "C-b" 'doc-view-scroll-down-or-previous-page))
 
                                         ;  (general-def '(normal visual) outline-minor-mode-map
                                         ;    "zn"  'outline-next-visible-heading
@@ -160,24 +159,13 @@
                                         ;    "zf"  'outline-forward-same-level
                                         ;    "zB"  'outline-backward-same-level)
 
-  (general-def 'normal package-menu-mode-map
-                                        ; "i"   'package-menu-mark-install
-                                        ; "U"   'package-menu-mark-upgrades
-                                        ; "d"   'package-menu-mark-delete
-                                        ; "u"   'package-menu-mark-unmark
-                                        ; "x"   'package-menu-execute
-    "q"   'quit-window))
-
 (use-package suggest
   :general (tyrant-def "as" 'suggest))
 
 (use-package evil
   :hook (after-init . evil-mode)
   :config
-  (evil-set-initial-state 'shell-mode 'normal)
-  (evil-set-initial-state 'doc-view-mode 'normal)
-  (evil-set-initial-state 'package-menu-mode 'normal)
-  (evil-set-initial-state 'biblio-selection-mode 'motion)
+  (evil-set-initial-state 'shell-mode 'insert)
   (setq doc-view-continuous t)
   :general
   (tyrant-def
@@ -185,7 +173,7 @@
     "wl"  'evil-window-right
     "wj"  'evil-window-down
     "wk"  'evil-window-up
-    "bn"  'evil-buffer-new))
+    "bN"  'evil-buffer-new))
                                         ; "fd"  'evil-save-and-close)
                                         ; ('motion override-global-map
                                         ;   "]b"  'evil-next-buffer
@@ -201,9 +189,10 @@
   :after evil
   :config (global-evil-surround-mode 1))
 
-(use-package evil-easymotion
-  :after evil
-  :config (evilem-default-keybindings "gs"))
+(use-package avy
+  :general
+  (tyrant-def
+    "gc" 'avy-goto-char-timer))
 
 (use-package evil-escape
   :after evil
@@ -221,6 +210,7 @@
   (setq evilmi-always-simple-jump t)
   (global-evil-visualstar-mode 1))
 
+(use-package ace-window)
 ;; (use-package deadgrep
 ;;   :load-path "~/.emacs.d/private/deadgrep"
 ;;   :bind* (("C-c /" . deadgrep)))
