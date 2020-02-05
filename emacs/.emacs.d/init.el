@@ -406,7 +406,8 @@
   (electric-pair-mode)
   (yas-global-mode 1)
   (flycheck-mode)
-  (display-line-numbers-mode))
+  ;; (display-line-numbers-mode)
+  )
 
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 (setq before-save-hook 'nil)
