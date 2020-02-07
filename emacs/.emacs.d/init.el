@@ -67,6 +67,9 @@
                            ("melpa-stable" . "https://stable.melpa.org/packages/")
                            ("repo-org"     . "https://orgmode.org/elpa/"))))
 
+(use-package exec-path-from-shell)
+(exec-path-from-shell-initialize)
+
 (use-package which-key
   :config (which-key-mode 1))
 
@@ -355,16 +358,13 @@
 ;;   ;;   "zs" 'helm-flyspell-correct
 ;;   ;;   "z=" 'flyspell-buffer))
 
-(use-package exec-path-from-shell
-  :init (exec-path-from-shell-initialize))
 
-(use-package add-node-modules-path)
-
-(eval-after-load 'js-mode
-  '(add-hook 'js-mode-hook #'add-node-modules-path))
 
 (use-package prettier-js
   :hook (js-mode . prettier-js-mode))
+
+(eval-after-load 'js-mode
+  '(add-hook 'js-mode-hook #'add-node-modules-path))
 
 (use-package magit
   :commands (magit-status)
