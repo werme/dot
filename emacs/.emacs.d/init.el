@@ -246,23 +246,23 @@
 
 (set-face-attribute 'hl-line nil :background "#3f3f3f")
 
-(use-package flycheck
-  :commands (flycheck-mode)
-  :config
-  ;; (setq flycheck-highlighting-mode 'lines)
-  (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled))
-  ;; (set-face-attribute 'flycheck-error nil :background "red")
-  ;; (set-face-attribute 'flycheck-warning nil :background "yellow")
-  (global-flycheck-mode)
-  :general
-  (tyrant-def
-    "e"  '(:ignore t :which-key "Errors")
-    "]"  'flycheck-next-error
-    "["  'flycheck-previous-error
-    "en" 'flycheck-next-error
-    "ep" 'flycheck-previous-error
-    "ee" 'counsel-flycheck
-    "bc" 'flycheck-buffer))
+;; (use-package flycheck
+;;   :commands (flycheck-mode)
+;;   :config
+;;   ;; (setq flycheck-highlighting-mode 'lines)
+;;   (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled))
+;;   ;; (set-face-attribute 'flycheck-error nil :background "red")
+;;   ;; (set-face-attribute 'flycheck-warning nil :background "yellow")
+;;   (global-flycheck-mode)
+;;   :general
+;;   (tyrant-def
+;;     "e"  '(:ignore t :which-key "Errors")
+;;     "]"  'flycheck-next-error
+;;     "["  'flycheck-previous-error
+;;     "en" 'flycheck-next-error
+;;     "ep" 'flycheck-previous-error
+;;     "ee" 'counsel-flycheck
+;;     "bc" 'flycheck-buffer))
 
 (use-package lsp-mode
   :hook (js-mode . lsp)
@@ -273,7 +273,7 @@
 (use-package lsp-ui
   :commands lsp-ui-mode
   :config
-  (flycheck-add-next-checker 'lsp-ui 'javascript-eslint)
+  ;; (flycheck-add-next-checker 'lsp-ui 'javascript-eslint)
   (setq lsp-ui-doc-enable nil
         lsp-ui-peek-enable nil
         lsp-ui-sideline-enable nil
@@ -303,6 +303,8 @@
   ;; :config
   ;; (setq counsel-locate-cmd 'counsel-locate-cmd-mdfind)
   ;; (setq counsel-find-file-at-point t)
+  :config
+  (setq counsel-rg-base-command "rg --sort path -M 120 --no-heading --line-number --color never %s")
   :general
   (tyrant-def
     "SPC" 'counsel-M-x
@@ -315,16 +317,24 @@
   :after (counsel swiper)
   :custom
   (ivy-display-style 'fancy)
-  ;; (ivy-count-format "(%d/%d) ")
+  (ivy-count-format "(%d/%d) ")
   (ivy-use-virtual-buffers t)
   :config
   (ivy-mode 1)
+  (setq ivy-read-action-function #'ivy-hydra-read-action)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-initial-inputs-alist nil)
+  (setq ivy-height 30)
   (setq ivy-re-builders-alist
         '((swiper . ivy--regex-plus)
           (t      . ivy--regex-ignore-order))))
 ;; (setq ivy-display-function nil))
+
+(use-package ivy-rich
+  :config (ivy-rich-mode))
+
+(use-package amx
+  :config (amx-mode))
 
 
 (use-package counsel-projectile)
@@ -358,13 +368,12 @@
 ;;   ;;   "zs" 'helm-flyspell-correct
 ;;   ;;   "z=" 'flyspell-buffer))
 
-
-
-(use-package prettier-js
-  :hook (js-mode . prettier-js-mode))
+(use-package prettier-js)
 
 (eval-after-load 'js-mode
-  '(add-hook 'js-mode-hook #'add-node-modules-path))
+  '(progn
+     (add-hook 'js-mode-hook #'add-node-modules-path)
+     (add-hook 'js-mode-hook #'prettier-js-mode)))
 
 (use-package magit
   :commands (magit-status)
@@ -405,7 +414,6 @@
   (whitespace-mode)
   (electric-pair-mode)
   (yas-global-mode 1)
-  (flycheck-mode)
   ;; (display-line-numbers-mode)
   )
 
