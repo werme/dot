@@ -265,20 +265,27 @@
 ;;     "bc" 'flycheck-buffer))
 
 (use-package lsp-mode
-  :hook (js-mode . lsp)
-  :commands lsp
-  :config
-  (setq lsp-prefer-flymake nil))
+  :init
+  (setq lsp-keymap-prefix "C-l")
+  (setq lsp-prefer-flymake t)
+  :hook ((js-mode . lsp-deferred)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands (lsp lsp-deferred))
 
-(use-package lsp-ui
-  :commands lsp-ui-mode
+(use-package flymake
   :config
-  ;; (flycheck-add-next-checker 'lsp-ui 'javascript-eslint)
-  (setq lsp-ui-doc-enable nil
-        lsp-ui-peek-enable nil
-        lsp-ui-sideline-enable nil
-        lsp-ui-imenu-enable nil
-        lsp-ui-flycheck-enable t))
+  (define-key flymake-mode-map (kbd "M-]") 'flymake-goto-next-error)
+  (define-key flymake-mode-map (kbd "M-[") 'flymake-goto-prev-error))
+
+;; (use-package lsp-ui
+;;   :commands lsp-ui-mode
+;;   :config
+;;   ;; (flycheck-add-next-checker 'lsp-ui 'javascript-eslint)
+;;   (setq lsp-ui-doc-enable nil
+;;         lsp-ui-peek-enable nil
+;;         lsp-ui-sideline-enable nil
+;;         lsp-ui-imenu-enable nil
+;;         lsp-ui-flycheck-enable t))
 
 (use-package company-lsp
   :after company
