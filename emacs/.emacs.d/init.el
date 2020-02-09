@@ -43,6 +43,7 @@
 (winner-mode 1)
 (put 'narrow-to-region 'disabled nil)
 (prefer-coding-system 'utf-8)
+;; (desktop-save-mode 1)
 
 
 ;; (setq package-enable-at-startup nil)
@@ -67,8 +68,8 @@
                            ("melpa-stable" . "https://stable.melpa.org/packages/")
                            ("repo-org"     . "https://orgmode.org/elpa/"))))
 
-(use-package exec-path-from-shell)
-(exec-path-from-shell-initialize)
+(use-package exec-path-from-shell
+  :hook (prog-mode . exec-path-from-shell-initialize))
 
 (use-package which-key
   :config (which-key-mode 1))
@@ -162,9 +163,6 @@
                                         ;    "zf"  'outline-forward-same-level
                                         ;    "zB"  'outline-backward-same-level)
 
-(use-package suggest
-  :general (tyrant-def "as" 'suggest))
-
 (use-package evil
   :hook (after-init . evil-mode)
   :config
@@ -177,16 +175,6 @@
     "wj"  'evil-window-down
     "wk"  'evil-window-up
     "bN"  'evil-buffer-new))
-                                        ; "fd"  'evil-save-and-close)
-                                        ; ('motion override-global-map
-                                        ;   "]b"  'evil-next-buffer
-                                        ;   "[b"  'evil-prev-buffer))
-
-                                        ; (use-package evil-numbers
-                                        ;   :after evil
-                                        ;   :general
-                                        ;   ('normal "C-=" 'evil-numbers/inc-at-pt
-                                        ;            "C--" 'evil-numbers/dec-at-pt))
 
 (use-package evil-surround
   :after evil
@@ -225,8 +213,8 @@
   (define-key company-active-map (kbd "M-p") nil)
   (define-key company-active-map (kbd "C-n") #'company-select-next-or-abort)
   (define-key company-active-map (kbd "C-p") #'company-select-previous-or-abort)
-  (setq company-minimum-prefix-length 2)
-  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1)
+  (setq company-idle-delay 0.1)
   (setq company-dabbrev-downcase nil)
   (setq company-frontends '(company-echo-metadata-frontend
                             company-pseudo-tooltip-unless-just-one-frontend
@@ -244,7 +232,7 @@
 ;;   :defer 5
 ;;   :config (company-statistics-mode))
 
-(set-face-attribute 'hl-line nil :background "#3f3f3f")
+;; (set-face-attribute 'hl-line nil :background "#3f3f3f")
 
 ;; (use-package flycheck
 ;;   :commands (flycheck-mode)
@@ -273,19 +261,10 @@
   :commands (lsp lsp-deferred))
 
 (use-package flymake
-  :config
-  (define-key flymake-mode-map (kbd "M-]") 'flymake-goto-next-error)
-  (define-key flymake-mode-map (kbd "M-[") 'flymake-goto-prev-error))
-
-;; (use-package lsp-ui
-;;   :commands lsp-ui-mode
-;;   :config
-;;   ;; (flycheck-add-next-checker 'lsp-ui 'javascript-eslint)
-;;   (setq lsp-ui-doc-enable nil
-;;         lsp-ui-peek-enable nil
-;;         lsp-ui-sideline-enable nil
-;;         lsp-ui-imenu-enable nil
-;;         lsp-ui-flycheck-enable t))
+    :config
+    (set-face-attribute 'flymake-error nil :foreground "#ff6655" :background "#100")
+    (define-key flymake-mode-map (kbd "M-]") 'flymake-goto-next-error)
+    (define-key flymake-mode-map (kbd "M-[") 'flymake-goto-prev-error))
 
 (use-package company-lsp
   :after company
@@ -375,7 +354,8 @@
 ;;   ;;   "zs" 'helm-flyspell-correct
 ;;   ;;   "z=" 'flyspell-buffer))
 
-(use-package prettier-js)
+(use-package prettier-js
+  :commands (prettier-js-mode))
 
 (eval-after-load 'js-mode
   '(progn
@@ -393,7 +373,7 @@
 (use-package evil-magit
   :hook (magit-mode . evil-magit-init))
 
-(use-package yasnippet)
+;; (use-package yasnippet)
 
 (use-package transpose-frame
   :commands (transpose-frame)
@@ -411,7 +391,6 @@
 (setq whitespace-style '(face trailing))
 
 (use-package editorconfig
-  :ensure t
   :config
   (editorconfig-mode 1))
 
@@ -420,7 +399,7 @@
   (show-paren-mode)
   (whitespace-mode)
   (electric-pair-mode)
-  (yas-global-mode 1)
+  ;; (yas-global-mode 1)
   ;; (display-line-numbers-mode)
   )
 
