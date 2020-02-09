@@ -220,9 +220,11 @@
                             company-pseudo-tooltip-unless-just-one-frontend
                             company-preview-frontend))
   (setq company-backends '((company-capf
-                            company-files)
-                           (company-dabbrev-code company-keywords)
-                           company-dabbrev company-yasnippet)))
+                            company-files
+                            company-dabbrev-code
+                            company-keywords
+                            company-dabbrev
+                            company-yasnippet))))
 
 ;; (use-package company-quickhelp
 ;;   :defer 5
