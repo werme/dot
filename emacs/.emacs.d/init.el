@@ -257,7 +257,7 @@
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-l")
-  (setq lsp-prefer-flymake t)
+  (setq lsp-diagnostic-package :flymake)
   :hook ((js-mode . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands (lsp lsp-deferred))
@@ -356,13 +356,13 @@
 ;;   ;;   "zs" 'helm-flyspell-correct
 ;;   ;;   "z=" 'flyspell-buffer))
 
-(use-package prettier-js
-  :commands (prettier-js-mode))
+;; (use-package prettier-js
+;;   :commands (prettier-js-mode))
 
 (eval-after-load 'js-mode
   '(progn
-     (add-hook 'js-mode-hook #'add-node-modules-path)
-     (add-hook 'js-mode-hook #'prettier-js-mode)))
+     (add-hook 'js-mode-hook #'add-node-modules-path)))
+     ;; (add-hook 'js-mode-hook #'prettier-js-mode)))
 
 (use-package magit
   :commands (magit-status)
@@ -400,7 +400,7 @@
   (auto-fill-mode)
   (show-paren-mode)
   (whitespace-mode)
-  (electric-pair-mode)
+  ;; (electric-pair-mode)
   ;; (yas-global-mode 1)
   ;; (display-line-numbers-mode)
   )
