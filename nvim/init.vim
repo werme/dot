@@ -136,7 +136,10 @@ nmap <Leader>d :copy .<CR>
 vmap <Leader>d :copy '><CR>
 
 nmap <Leader>w :w<CR>
+nmap <Leader>fs :w<CR>
 nmap <Leader>q :q<CR>
+nmap <Leader>ps :cd<Space>
+nmap <Leader>s /
 nmap <Leader>c :
 
 nmap <Leader>l :b#<CR>
