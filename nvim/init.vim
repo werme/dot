@@ -7,7 +7,6 @@ set laststatus=2             " window will always have a status line
 set nobackup
 set nowritebackup
 set noswapfile
-set cmdheight=1
 set updatetime=300
 set wrap " Wrap lines
 set linebreak " Wraps lines a words
@@ -22,13 +21,9 @@ set showtabline=2
 set shortmess+=c
 set signcolumn=yes " always show signcolumns
 
-" Display line-numbers on the left
-set number
-set nu relativenumber
-
 set ignorecase
 
-set mouse=a " Enable the mouse in all modes
+" set mouse=a " Enable the mouse in all modes
 
 set termguicolors " True colors for colorscheme
 
@@ -51,15 +46,14 @@ Plug '~/lib/fzf' " fzf includes a vim command
 Plug 'junegunn/fzf.vim' " This extends it with some more commands
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
-Plug 'junegunn/goyo.vim'
 Plug 'editorconfig/editorconfig-vim' " Make vim read editorconfig files
 Plug 'tpope/vim-commentary' " Toggle comments
 Plug 'tpope/vim-fugitive' " Git
 Plug 'tpope/vim-unimpaired'
 Plug 'jiangmiao/auto-pairs' " Closes brackets etc, it's nice
 Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
-Plug 'rbong/vim-flog'
-Plug 'farmergreg/vim-lastplace'
+Plug 'rbong/vim-flog' " git branch viewer, integrates with fugitive
+Plug 'farmergreg/vim-lastplace' " Reopen files at previous cursor position
 Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
 
@@ -128,8 +122,6 @@ map <Space> <Leader>
 
 " better ESC
 tnoremap <Esc> <C-\><C-n>
-" tnoremap jj <C-\><C-n>
-" inoremap jj <Esc>
 inoremap fd <Esc>
 
 nmap <Leader>d :copy .<CR>
