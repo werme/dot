@@ -372,6 +372,9 @@
   :config
   (setq lazy-highlight-initial-delay 0))
 
+(use-package ctrlf
+   :straight (:host github :repo "raxod502/ctrlf"))
+
 (use-package magit
   :commands (magit-status)
   :general
@@ -399,6 +402,8 @@
   (tyrant-def "'" 'shell-pop))
 
 (setq whitespace-style '(face trailing))
+(setq maximum-scroll-margin 0.5)
+(setq scroll-margin 999)
 
 ;; Package `apheleia' implements a sophisticated algorithm for
 ;; applying code formatters asynchronously on save without moving

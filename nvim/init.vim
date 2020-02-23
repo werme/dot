@@ -16,6 +16,7 @@ set softtabstop=2 " Number of spaces per tab
 set shiftwidth=2   " Number of auto indent spaces
 set autoindent " Auto indent
 set showtabline=2
+set scrolloff=999
 
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
