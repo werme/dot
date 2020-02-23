@@ -20,6 +20,12 @@
 (setq initial-scratch-message "")
 (setq enable-recursive-minibuffers t)
 (setq column-number-mode t)
+;; Don't make backup files.
+(setq make-backup-files nil)
+;; Don't make autosave files.
+(setq auto-save-default nil)
+;; Don't make lockfiles.
+(setq create-lockfiles nil)
 (setq-default indent-tabs-mode nil)
 
 (with-eval-after-load 'display-line-numbers
@@ -45,19 +51,36 @@
 (prefer-coding-system 'utf-8)
 ;; (desktop-save-mode 1)
 
+(defvar bootstrap-version)
+(let ((bootstrap-file
+              (expand-file-name
+               "straight/repos/straight.el/bootstrap.el"
+               user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
 
 ;; (setq package-enable-at-startup nil)
 (let ((default-directory "~/.emacs.d/elpa"))
   (normal-top-level-add-subdirs-to-load-path))
+
 (package-initialize)
 
-(unless (package-installed-p 'use-package) ; unless it is already installed
-  (package-refresh-contents) ; updage packages archive
-  (package-install 'use-package)) ; and install the most recent version of use-package
+(straight-use-package 'use-package)
+
+;; (unless (package-installed-p 'use-package) ; unless it is already installed
+;;   (package-refresh-contents) ; updage packages archive
+;;   (package-install 'use-package)) ; and install the most recent version of use-package
 
 (eval-when-compile
-  (require 'use-package)
-  (setq use-package-always-ensure t))
+  (require 'use-package))
+  ;; (setq use-package-always-ensure t))
 
 (use-package package
   :config
@@ -67,6 +90,40 @@
                            ("melpa"        . "https://melpa.org/packages/")
                            ("melpa-stable" . "https://stable.melpa.org/packages/")
                            ("repo-org"     . "https://orgmode.org/elpa/"))))
+
+(use-package selectrum
+  :straight (:host github :repo "raxod502/selectrum")
+  :defer t
+  :init
+  ;; This doesn't actually load Selectrum.
+  (selectrum-mode +1))
+
+;; Package `prescient' is a library for intelligent sorting and
+;; filtering in various contexts.
+(use-package prescient
+  :config
+  ;; Remember usage statistics across Emacs sessions.
+  (prescient-persist-mode +1))
+
+;; Package `selectrum-prescient' provides intelligent sorting and
+;; filtering for candidates in Selectrum menus.
+(use-package selectrum-prescient
+  :straight (:host github :repo "raxod502/prescient.el"
+                                      :files
+                                      ("selectrum-prescient.el"))
+  :demand t
+  :after selectrum
+  :config
+  (selectrum-prescient-mode +1))
+
+;; Feature `saveplace' provides a minor mode for remembering the
+;; location of point in each file you visit, and returning it there
+;; when you find the file again.
+(use-package saveplace
+  :ensure t
+  :demand t
+  :config
+  (save-place-mode +1))
 
 (use-package exec-path-from-shell
   :hook (prog-mode . exec-path-from-shell-initialize))
@@ -104,6 +161,9 @@
     "h"   (general-simulate-key "C-h")
     "u"   (general-simulate-key "C-u")
     "x"   (general-simulate-key "C-x")
+    "s"   (general-simulate-key "C-s")
+
+    "SPC" (general-simulate-key "M-x")
 
     ;; Quit operations
     "q"	  '(:ignore t :which-key "quit emacs")
@@ -117,6 +177,7 @@
     "bp"  'previous-buffer
     "bq"  'kill-buffer-and-window
     "br"  'revert-buffer
+    "bm"  'ibuffer
 
     ;; Window operations
     "w"   '(:ignore t :which-key "window")
@@ -216,15 +277,23 @@
   (setq company-minimum-prefix-length 1)
   (setq company-idle-delay 0.1)
   (setq company-dabbrev-downcase nil)
-  (setq company-frontends '(company-echo-metadata-frontend
-                            company-pseudo-tooltip-unless-just-one-frontend
-                            company-preview-frontend))
+  ;; Always display the entire suggestion list onscreen, placing it
+  ;; above the cursor if necessary.
+  (setq company-tooltip-minimum company-tooltip-limit)
+  ;; Always display suggestions in the tooltip, even if there is only
+  ;; one. Also, don't display metadata in the echo area.
+  (setq company-frontends '(company-pseudo-tooltip-frontend))
   (setq company-backends '((company-capf
                             company-files
                             company-dabbrev-code
                             company-keywords
                             company-dabbrev
                             company-yasnippet))))
+
+
+(use-package company-prescient
+  :straight t
+  :hook 'company-mode-hook)
 
 ;; (use-package company-quickhelp
 ;;   :defer 5
@@ -233,26 +302,6 @@
 ;; (use-package company-statistics
 ;;   :defer 5
 ;;   :config (company-statistics-mode))
-
-;; (set-face-attribute 'hl-line nil :background "#3f3f3f")
-
-;; (use-package flycheck
-;;   :commands (flycheck-mode)
-;;   :config
-;;   ;; (setq flycheck-highlighting-mode 'lines)
-;;   (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled))
-;;   ;; (set-face-attribute 'flycheck-error nil :background "red")
-;;   ;; (set-face-attribute 'flycheck-warning nil :background "yellow")
-;;   (global-flycheck-mode)
-;;   :general
-;;   (tyrant-def
-;;     "e"  '(:ignore t :which-key "Errors")
-;;     "]"  'flycheck-next-error
-;;     "["  'flycheck-previous-error
-;;     "en" 'flycheck-next-error
-;;     "ep" 'flycheck-previous-error
-;;     "ee" 'counsel-flycheck
-;;     "bc" 'flycheck-buffer))
 
 (use-package lsp-mode
   :init
@@ -263,90 +312,45 @@
   :commands (lsp lsp-deferred))
 
 (use-package flymake
-    :config
-    (set-face-attribute 'flymake-error nil :foreground "#ff6655" :background "#100")
-    (define-key flymake-mode-map (kbd "M-]") 'flymake-goto-next-error)
-    (define-key flymake-mode-map (kbd "M-[") 'flymake-goto-prev-error))
+  :config
+  (set-face-attribute 'flymake-error nil :foreground "#ff6655" :background "#100")
+  ;; (define-key flymake-mode-map (kbd "M-]") 'flymake-goto-next-error)
+  ;; (define-key flymake-mode-map (kbd "M-[") 'flymake-goto-prev-error)
+  (tyrant-def
+    "e"  '(:ignore t :which-key "Errors")
+    "]"  'flymake-goto-next-error
+    "["  'flymake-goto-previous-error))
+;; "en" 'flycheck-next-error
+;; "ep" 'flycheck-previous-error
+;; "ee" 'counsel-flycheck
+;; "bc" 'flycheck-buffer))
 
 (use-package company-lsp
   :after company
   :commands company-lsp
   :config (add-to-list 'company-backends 'company-lsp))
 
-(use-package swiper
-  :commands swiper
-  :general
-  (tyrant-def
-    "s" 'swiper))
-
-(use-package counsel
-  ;; :commands (counsel-load-theme
-  ;;            counsel-bookmark)
-  ;; :bind* (("C-c i" . counsel-imenu)
-  ;;         ("C-x C-f" . counsel-find-file)
-  ;;         ("C-x C-b" . ivy-switch-buffer)
-  ;;         ("C-c C-/" . counsel-rg)
-  ;;         ("s-<backspace>" . ivy-switch-buffer)
-  ;;         ("M-x" . counsel-M-x))
-  ;; :config
-  ;; (setq counsel-locate-cmd 'counsel-locate-cmd-mdfind)
-  ;; (setq counsel-find-file-at-point t)
-  :config
-  (setq counsel-rg-base-command "rg --sort path -M 120 --no-heading --line-number --color never %s")
-  :general
-  (tyrant-def
-    "SPC" 'counsel-M-x
-    "bm"  'ivy-switch-buffer
-    "ff"  'counsel-find-file
-    "fr"  'counsel-recentf))
-;; "fL"  'helm-locate))
-
-(use-package ivy
-  :after (counsel swiper)
-  :custom
-  (ivy-display-style 'fancy)
-  (ivy-count-format "(%d/%d) ")
-  (ivy-use-virtual-buffers t)
-  :config
-  (ivy-mode 1)
-  (setq ivy-read-action-function #'ivy-hydra-read-action)
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-initial-inputs-alist nil)
-  (setq ivy-height 30)
-  (setq ivy-re-builders-alist
-        '((swiper . ivy--regex-plus)
-          (t      . ivy--regex-ignore-order))))
-;; (setq ivy-display-function nil))
-
-(use-package ivy-rich
-  :config (ivy-rich-mode))
-
-(use-package amx
-  :config (amx-mode))
-
-
-(use-package counsel-projectile)
-;; :after (projectile)
-;; :hook projectile-mode)
-
 (use-package projectile
   :commands (projectile-mode)
   :general
   (tyrant-def
     "p"     '(:ignore t :which-key "projectile")
-    "p SPC" 'counsel-projectile
-    "pd"    'counsel-projectile-find-dir
-    "ps"    'counsel-projectile-switch-project
-    "pf"    'counsel-projectile-find-file
-    "pg"    'counsel-projectile-rg
-    "pb"    'counsel-projectile-switch-to-buffer
-    "j"     'counsel-projectile-find-file)
+    "pd"    'projectile-find-dir
+    "ps"    'projectile-switch-project
+    "pf"    'projectile-find-file
+    "pg"    'projectile-ripgrep
+    "pb"    'projectile-switch-to-buffer
+    "j"     'projectile-find-file)
   :init
-  (setq projectile-project-search-path '("~/dev/" "~/kry/code/" "~/.config/"))
+  (let ((project-root-paths '("~/dev/" "~/code/" "~/kry/code/" "~/.config/")))
+    (setq projectile-project-search-path (seq-filter #'file-directory-p
+                                                     project-root-paths)))
+
   :config
-  (projectile-mode 1)
-  (setq projectile-switch-project-action 'projectile-dired)
-  (setq projectile-completion-system 'ivy))
+  (setq projectile-completion-system 'default
+        projectile-enable-caching t
+        projectile-switch-project-action 'projectile-dired)
+  (projectile-mode 1))
 
 ;; (use-package helm-flyspell
 ;;   :commands (helm-flyspell-correct))
@@ -359,10 +363,14 @@
 ;; (use-package prettier-js
 ;;   :commands (prettier-js-mode))
 
-(eval-after-load 'js-mode
-  '(progn
-     (add-hook 'js-mode-hook #'add-node-modules-path)))
-     ;; (add-hook 'js-mode-hook #'prettier-js-mode)))
+;; (eval-after-load 'js-mode
+;;   '(progn
+;;      (add-hook 'js-mode-hook #'add-node-modules-path)))
+;; (add-hook 'js-mode-hook #'prettier-js-mode)))
+
+(use-package isearch
+  :config
+  (setq lazy-highlight-initial-delay 0))
 
 (use-package magit
   :commands (magit-status)
@@ -392,6 +400,14 @@
 
 (setq whitespace-style '(face trailing))
 
+;; Package `apheleia' implements a sophisticated algorithm for
+;; applying code formatters asynchronously on save without moving
+;; point or modifying the scroll position.
+(use-package apheleia
+  :straight (:host github :repo "raxod502/apheleia")
+  :init
+  (apheleia-global-mode +1))
+
 (use-package editorconfig
   :config
   (editorconfig-mode 1))
@@ -408,7 +424,6 @@
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 (setq before-save-hook 'nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
 
 (use-package doom-modeline
   :config
