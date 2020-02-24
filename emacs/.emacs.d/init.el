@@ -352,6 +352,7 @@
         projectile-switch-project-action 'projectile-dired)
   (projectile-mode 1))
 
+
 ;; (use-package helm-flyspell
 ;;   :commands (helm-flyspell-correct))
 ;;   ;; :general
@@ -373,7 +374,9 @@
   (setq lazy-highlight-initial-delay 0))
 
 (use-package ctrlf
-   :straight (:host github :repo "raxod502/ctrlf"))
+  :straight (:host github :repo "raxod502/ctrlf")
+  :config
+  (ctrlf-mode +1))
 
 (use-package magit
   :commands (magit-status)
@@ -402,8 +405,7 @@
   (tyrant-def "'" 'shell-pop))
 
 (setq whitespace-style '(face trailing))
-(setq maximum-scroll-margin 0.5)
-(setq scroll-margin 999)
+(setq scroll-margin 10)
 
 ;; Package `apheleia' implements a sophisticated algorithm for
 ;; applying code formatters asynchronously on save without moving

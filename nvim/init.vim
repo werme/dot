@@ -16,7 +16,7 @@ set softtabstop=2 " Number of spaces per tab
 set shiftwidth=2   " Number of auto indent spaces
 set autoindent " Auto indent
 set showtabline=2
-set scrolloff=999
+set scrolloff=10
 
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
@@ -151,7 +151,7 @@ nmap <Leader>b :NERDTreeToggle<CR>
 nmap <silent> <Leader>g :Prettier<CR>
 
 " Yank to *
-noremap Y "*y 
+noremap Y "*y
 " Make 'Enter' clear search highlight
 nnoremap <CR> :noh<CR><CR>
 
@@ -198,4 +198,3 @@ let s:firewatch_syntax_accent = '#56b6c2'
 exec 'hi Search guibg=' . s:firewatch_syntax_accent . ' guifg=' . s:firewatch_syntax_bg
 exec 'hi IncSearch guibg=' . s:firewatch_syntax_accent . ' guifg=' . s:firewatch_syntax_bg
 exec 'hi MatchParen guibg=' . s:firewatch_syntax_bg . ' guifg=' . s:firewatch_syntax_accent
-
