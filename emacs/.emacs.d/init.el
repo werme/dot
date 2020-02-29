@@ -49,7 +49,6 @@
 (winner-mode 1)
 (put 'narrow-to-region 'disabled nil)
 (prefer-coding-system 'utf-8)
-;; (desktop-save-mode 1)
 
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -66,7 +65,6 @@
       (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 
-;; (setq package-enable-at-startup nil)
 (let ((default-directory "~/.emacs.d/elpa"))
   (normal-top-level-add-subdirs-to-load-path))
 
@@ -74,13 +72,8 @@
 
 (straight-use-package 'use-package)
 
-;; (unless (package-installed-p 'use-package) ; unless it is already installed
-;;   (package-refresh-contents) ; updage packages archive
-;;   (package-install 'use-package)) ; and install the most recent version of use-package
-
 (eval-when-compile
   (require 'use-package))
-  ;; (setq use-package-always-ensure t))
 
 (use-package package
   :config
@@ -205,9 +198,6 @@
     "a"   '(:ignore t :which-key "Applications")
     "ad"  'dired
     ":"   'shell-command)
-                                        ;    ";"   'eval-expression
-                                        ; "ac"  'calendar
-                                        ;    "oa"  'org-agenda)
 
   (general-def 'normal doc-view-mode-map
     "j"   'doc-view-next-line-or-next-page
@@ -263,9 +253,6 @@
   (global-evil-visualstar-mode 1))
 
 (use-package ace-window)
-;; (use-package deadgrep
-;;   :load-path "~/.emacs.d/private/deadgrep"
-;;   :bind* (("C-c /" . deadgrep)))
 
 (use-package company
   :hook (after-init . global-company-mode)
@@ -320,10 +307,6 @@
     "e"  '(:ignore t :which-key "Errors")
     "]"  'flymake-goto-next-error
     "["  'flymake-goto-previous-error))
-;; "en" 'flycheck-next-error
-;; "ep" 'flycheck-previous-error
-;; "ee" 'counsel-flycheck
-;; "bc" 'flycheck-buffer))
 
 (use-package company-lsp
   :after company
@@ -360,14 +343,6 @@
 ;;   ;;   :states '(normal visual)
 ;;   ;;   "zs" 'helm-flyspell-correct
 ;;   ;;   "z=" 'flyspell-buffer))
-
-;; (use-package prettier-js
-;;   :commands (prettier-js-mode))
-
-;; (eval-after-load 'js-mode
-;;   '(progn
-;;      (add-hook 'js-mode-hook #'add-node-modules-path)))
-;; (add-hook 'js-mode-hook #'prettier-js-mode)))
 
 (use-package isearch
   :config
@@ -412,6 +387,9 @@
 ;; point or modifying the scroll position.
 (use-package apheleia
   :straight (:host github :repo "raxod502/apheleia")
+  :general
+  (tyrant-def
+    "bf" 'apheleia-format-buffer)
   :init
   (apheleia-global-mode +1))
 
@@ -422,11 +400,7 @@
 (defun my-prog-mode-hook ()
   (auto-fill-mode)
   (show-paren-mode)
-  (whitespace-mode)
-  ;; (electric-pair-mode)
-  ;; (yas-global-mode 1)
-  ;; (display-line-numbers-mode)
-  )
+  (whitespace-mode))
 
 (add-hook 'prog-mode-hook 'my-prog-mode-hook)
 (setq before-save-hook 'nil)
@@ -441,7 +415,7 @@
   :config
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
-  (load-theme 'doom-one t))
+  (load-theme 'doom-solarized-light t))
 
 (eval-when-compile
   (setq-default custom-file (expand-file-name "custom.el"

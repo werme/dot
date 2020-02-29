@@ -28,8 +28,7 @@ set ignorecase
 
 set termguicolors " True colors for colorscheme
 
-" Firewatch theme supports 'light' looking pretty good as well
-set background=dark
+set background=light
 " Mark 80th column
 set colorcolumn=80
 " lightline displays the mode already
@@ -39,7 +38,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-sensible' " Sensible defaults
 Plug 'itchyny/lightline.vim' " Light configurable statusline
 Plug 'mengelbrecht/lightline-bufferline'
-Plug 'rakr/vim-two-firewatch'
+Plug 'lifepillar/vim-solarized8'
 Plug 'sheerun/vim-polyglot' " Language packs
 Plug 'pangloss/vim-javascript' " Some extra for js configurability
 Plug 'airblade/vim-gitgutter'
@@ -59,22 +58,19 @@ Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
 
 syntax on
-colorscheme two-firewatch
+colorscheme solarized8
 
 let g:javascript_plugin_flow = 1
 
 let g:closetag_filetypes = 'js,javascript.jsx'
 let g:closetag_filenames = '*.js'
 
-" let g:onedark_terminal_italics=1
-let g:two_firewatch_italics=1
-
 function! CocCurrentFunction()
     return get(b:, 'coc_current_function', '')
 endfunction
 
 let g:lightline = {
-      \ 'colorscheme': 'twofirewatch'
+      \ 'colorscheme': 'solarized'
       \ }
 let g:lightline.component_function = {
       \ 'gitbranch': 'fugitive#head',
@@ -97,9 +93,6 @@ command! Viminit :e $MYVIMRC
 
 command! Save :mks! ~/.vim/sessions/Prev.vim
 
-" Switch CWD to the directory of the open buffer
-command! CD :cd %:p:h
-
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
   \   'rg --hidden --column --line-number --no-heading --smart-case '.shellescape(<q-args>),
@@ -114,9 +107,6 @@ let g:fzf_layout = { 'window': 'enew' }
 
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Start terminal in insert mode
-" autocmd BufWinEnter,WinEnter term://* startinsert
 
 " Remap space key to leader
 map <Space> <Leader>
@@ -134,10 +124,12 @@ nmap <Leader>q :q<CR>
 nmap <Leader>ps :cd<Space>
 nmap <Leader>s /
 nmap <Leader>c :
-
+nmap <Leader>fed :Viminit<CR>
+nmap <Leader>bd :bd<CR>
 nmap <Leader>l :b#<CR>
+nmap <Leader>wo <C-w>o
 
-" Remap VIM 0 to first non-blank character
+" Remap VIM 0 to firsT non-blank character
 map 0 ^
 
 " Some fzf mappings
@@ -158,7 +150,6 @@ nnoremap <CR> :noh<CR><CR>
 " Find and replace
 map <leader>sr :%s///g<left><left>
 
-" " Use `[c` and `]c` to navigate diagnostics
 nmap <silent> <Leader>[ <Plug>(coc-diagnostic-prev)
 nmap <silent> <Leader>] <Plug>(coc-diagnostic-next)
 
@@ -192,9 +183,3 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-let s:firewatch_syntax_bg = '#282c34'
-let s:firewatch_syntax_accent = '#56b6c2'
-
-exec 'hi Search guibg=' . s:firewatch_syntax_accent . ' guifg=' . s:firewatch_syntax_bg
-exec 'hi IncSearch guibg=' . s:firewatch_syntax_accent . ' guifg=' . s:firewatch_syntax_bg
-exec 'hi MatchParen guibg=' . s:firewatch_syntax_bg . ' guifg=' . s:firewatch_syntax_accent
