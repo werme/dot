@@ -417,6 +417,8 @@
   (setq doom-themes-enable-italic t)
   (load-theme 'doom-solarized-light t))
 
+(use-package cider)
+
 (eval-when-compile
   (setq-default custom-file (expand-file-name "custom.el"
                                               user-emacs-directory))
