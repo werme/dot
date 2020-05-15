@@ -136,10 +136,12 @@ nmap <Leader>q :q<CR>
 nmap <Leader>ps :cd<Space>
 nmap <Leader>s /
 nmap <Leader>c :
+nmap <Leader><Space> :
 nmap <Leader>fed :Viminit<CR>
 nmap <Leader>bd :bd<CR>
 nmap <Leader>l :b#<CR>
 nmap <Leader>wo <C-w>o
+nmap <Leader>wD <C-w>o
 
 " Remap VIM 0 to firsT non-blank character
 map 0 ^
