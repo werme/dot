@@ -87,6 +87,8 @@
 (use-package selectrum
   :straight (:host github :repo "raxod502/selectrum")
   :defer t
+  ;; :config
+  ;; (setq selectrum-num-candidates-displayed 30)
   :init
   ;; This doesn't actually load Selectrum.
   (selectrum-mode +1))
@@ -415,7 +417,7 @@
   :config
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
-  (load-theme 'doom-solarized-light t))
+  (load-theme 'doom-solarized-dark t))
 
 (use-package cider)
 
