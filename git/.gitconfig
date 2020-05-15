@@ -14,6 +14,7 @@
   cps = cherry-pick -s
   shrug = commit -m '¯\\_(ツ)_/¯'
   flip = commit -m '(╯°□°)╯︵ ┻━┻'
+  dab = commit -m 'ㄥ(⸝ ، ⸍ )‾‾‾‾‾'
   
   plo = pull origin
   pso = push origin
