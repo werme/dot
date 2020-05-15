@@ -72,21 +72,30 @@ function! CocCurrentFunction()
     return get(b:, 'coc_current_function', '')
 endfunction
 
+function! LightlineGitBlame() abort
+  let blame = get(b:, 'coc_git_blame', '')
+  return blame
+  " return winwidth(0) > 0 ? blame : ''
+endfunction
+
 let g:lightline = {
-      \ 'colorscheme': 'solarized'
+      \ 'colorscheme': 'onedark'
       \ }
 let g:lightline.component_function = {
       \ 'gitbranch': 'fugitive#head',
       \ 'cocstatus': 'coc#status',
-      \ 'currentfunction': 'CocCurrentFunction'
+      \ 'currentfunction': 'CocCurrentFunction',
+      \ 'blame': 'LightlineGitBlame'
       \ }
 let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
 let g:lightline.component_type = {'buffers': 'tabsel'}
 let g:lightline.active = {
       \ 'left': [
       \   ['mode', 'paste'],
-      \   ['cocstatus', 'currentfunction', 'gitbranch', 'readonly', 'filename', 'modified']
-      \ ]}
+      \   ['cocstatus', 'currentfunction', 'gitbranch', 'blame', 'readonly', 'filename', 'modified']
+      \ ],
+      \ 'right': [[],['blame']]
+      \ }
 let g:lightline.tabline = {'left': [['buffers']], 'right': []}
 
 let g:lightline#bufferline#show_number = 1
@@ -186,3 +195,9 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
+" Remap for do codeAction of selected region
+function! s:cocActionsOpenFromSelected(type) abort
+  execute 'CocCommand actions.open ' . a:type
+endfunction
+xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
+nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
