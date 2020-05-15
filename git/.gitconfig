@@ -4,6 +4,7 @@
 [hub]
   protocol = https
 [alias]
+  a = add
   st = status
   df = diff
   ci = commit
@@ -27,7 +28,7 @@
   l = log --color --graph --decorate --pretty=format:'%C(yellow)%h%Creset -%C(blue)%d%Creset %s %C(cyan)(%cr) %C(magenta)<%an>%Creset' --abbrev-commit --all
   lg = log --color --graph --decorate --pretty=format:'%C(yellow)%h%Creset -%C(blue)%d%Creset %s %C(cyan)(%cr) %C(magenta)<%an>%Creset' --abbrev-commit --all
   
-  brsort = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
+  brsort = for-each-ref --sort='authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
   
   forgot = !git add . && git commit --amend --no-edit
   amend = commit --amend --no-edit
