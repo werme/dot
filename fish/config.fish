@@ -31,3 +31,8 @@ set -x LANG "en_US.UTF-8"
 set -x LANGUAGE "en_US.UTF-8"
 set -x TZ "Europe/Stockholm"
 
+set PATH ~/.bin $PATH
+
+alias clojure-lsp="~/.bin/clojure-lsp"
+
+. ~/.fish.config.work
