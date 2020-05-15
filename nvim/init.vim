@@ -28,7 +28,7 @@ set ignorecase
 
 set termguicolors " True colors for colorscheme
 
-set background=light
+set background=dark
 " Mark 80th column
 set colorcolumn=80
 " lightline displays the mode already
@@ -38,7 +38,8 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-sensible' " Sensible defaults
 Plug 'itchyny/lightline.vim' " Light configurable statusline
 Plug 'mengelbrecht/lightline-bufferline'
-Plug 'lifepillar/vim-solarized8'
+" Plug 'lifepillar/vim-solarized8'
+Plug 'joshdick/onedark.vim'
 Plug 'sheerun/vim-polyglot' " Language packs
 Plug 'pangloss/vim-javascript' " Some extra for js configurability
 Plug 'airblade/vim-gitgutter'
@@ -58,7 +59,7 @@ Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
 
 syntax on
-colorscheme solarized8
+colorscheme onedark
 
 let g:javascript_plugin_flow = 1
 
