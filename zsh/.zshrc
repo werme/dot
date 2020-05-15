@@ -43,6 +43,8 @@ set PATH ~/.bin $PATH
 export _Z_CMD="j"
 . $HOME/dev/z/z.sh
 
+. $(brew --prefix asdf)/asdf.sh
+
 eval "$(fnm env --multi)"
 
 if command -v pyenv 1>/dev/null 2>&1; then
