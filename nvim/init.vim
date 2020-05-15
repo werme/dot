@@ -105,12 +105,12 @@ command! Viminit :e $MYVIMRC
 
 command! Save :mks! ~/.vim/sessions/Prev.vim
 
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --hidden --column --line-number --no-heading --smart-case '.shellescape(<q-args>),
-  \   1,
-  \   fzf#vim#with_preview(),
-  \   <bang>0)
+" command! -bang -nargs=* Rg
+"   \ call fzf#vim#grep(
+"   \   'rg --hidden --column --line-number --no-heading --smart-case '.shellescape(<q-args>),
+"   \   1,
+"   \   fzf#vim#with_preview(),
+"   \   <bang>0)
 
 command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 command! -nargs=0 EslintFix :call CocAction('runCommand', 'eslint.executeAutofix')
