@@ -410,14 +410,14 @@
 
 (use-package doom-modeline
   :config
-  (setq doom-modeline-unicode-fallback t)
-  :hook (after-init . doom-modeline-mode))
+  (setq doom-modeline-unicode-fallback t))
+  ;; :hook (after-init . doom-modeline-mode))
 
 (use-package doom-themes
   :config
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
-  (load-theme 'doom-solarized-dark t))
+  (load-theme 'doom-dark+ t))
 
 (use-package cider)
 

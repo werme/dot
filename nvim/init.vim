@@ -40,6 +40,8 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-sensible' " Sensible defaults
 Plug 'itchyny/lightline.vim' " Light configurable statusline
 Plug 'mengelbrecht/lightline-bufferline'
+Plug 'airblade/vim-rooter'
+Plug 'justinmk/vim-sneak'
 " Plug 'lifepillar/vim-solarized8'
 Plug 'joshdick/onedark.vim'
 Plug 'sheerun/vim-polyglot' " Language packs
@@ -119,6 +121,9 @@ let g:fzf_layout = { 'window': 'enew' }
 
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
+
+map f <Plug>Sneak_s
+map F <Plug>Sneak_S
 
 " Remap space key to leader
 map <Space> <Leader>
