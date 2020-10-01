@@ -1,15 +1,15 @@
 
-export ZSH="$HOME/.oh-my-zsh"
-
-ZSH_THEME="spaceship"
 HYPHEN_INSENSITIVE="true"
-plugins=(
-  zsh-autosuggestions
-  history-substring-search
-  zsh-syntax-highlighting
-)
 
-. $ZSH/oh-my-zsh.sh
+. $HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+. $HOME/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh
+. $HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+autoload -Uz compinit && compinit
+
+fpath+=$HOME/.zsh/pure
+autoload -U promptinit; promptinit
+prompt pure
 
 bindkey -e
 
@@ -40,12 +40,14 @@ export LANG="en_US.UTF-8"
 export LANGUAGE="en_US.UTF-8"
 export TZ="europe/Stockholm"
 
+export PATH="/usr/local/sbin:$PATH"
+
 set PATH ~/.bin $PATH
 
 export _Z_CMD="j"
 . $HOME/dev/z/z.sh
 
-. $(brew --prefix asdf)/asdf.sh
+# . $(brew --prefix asdf)/asdf.sh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 

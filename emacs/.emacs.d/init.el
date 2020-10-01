@@ -417,7 +417,7 @@
   :config
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
-  (load-theme 'doom-dark+ t))
+  (load-theme 'modus-vivendi t))
 
 (use-package cider)
 

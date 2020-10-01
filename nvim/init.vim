@@ -1,4 +1,4 @@
-set hidden
+" set hidden
 set showcmd                  " show command in bottom bar
 set cursorline               " highlight current line
 set wildmenu                 " visual autocomplete for command menu
@@ -41,7 +41,7 @@ Plug 'tpope/vim-sensible' " Sensible defaults
 Plug 'itchyny/lightline.vim' " Light configurable statusline
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'airblade/vim-rooter'
-Plug 'justinmk/vim-sneak'
+" Plug 'justinmk/vim-sneak'
 " Plug 'lifepillar/vim-solarized8'
 Plug 'joshdick/onedark.vim'
 Plug 'sheerun/vim-polyglot' " Language packs
@@ -122,8 +122,8 @@ let g:fzf_layout = { 'window': 'enew' }
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-map f <Plug>Sneak_s
-map F <Plug>Sneak_S
+" map f <Plug>Sneak_s
+" map F <Plug>Sneak_S
 
 " Remap space key to leader
 map <Space> <Leader>
@@ -181,6 +181,8 @@ nmap <silent> gr <Plug>(coc-references)
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
+" command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
@@ -208,3 +210,27 @@ function! s:cocActionsOpenFromSelected(type) abort
 endfunction
 xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
 nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/ionRange' support of LS, ex: coc-tsserver
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" set viminfo+=!
+
+" if !exists('g:PROJECTS')
+"   let g:PROJECTS = {}
+" endif
+
+" augroup project_discovery
+"   autocmd!
+"   autocmd User Fugitive let g:PROJECTS[fnamemodify(fugitive#repo().dir(), ':h')] = 1
+" augroup END
+
+" command! -complete=customlist,s:project_complete -nargs=1 Project cd <args>
+
+" function! s:project_complete(lead, cmdline, _) abort
+"   let results = keys(get(g:, 'PROJECTS', {}))
+"   let regex = substitute(a:lead, '.', '[&].*', 'g')
+"   return filter(results, 'v:val =~ regex')
+" endfunction
