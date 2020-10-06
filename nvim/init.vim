@@ -56,7 +56,7 @@ Plug 'tpope/vim-commentary' " Toggle comments
 Plug 'tpope/vim-fugitive' " Git
 Plug 'tpope/vim-unimpaired'
 Plug 'jiangmiao/auto-pairs' " Closes brackets etc, it's nice
-Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'rbong/vim-flog' " git branch viewer, integrates with fugitive
 Plug 'farmergreg/vim-lastplace' " Reopen files at previous cursor position
 Plug 'christoomey/vim-tmux-navigator'
