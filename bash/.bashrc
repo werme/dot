@@ -4,7 +4,6 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias vim="nvim"
 alias v="nvim"
-alias j="z"
 alias o="open"
 alias ls="exa"
 alias lst="exa --all --tree --ignore-glob='node_modules'"
@@ -37,8 +36,6 @@ export PATH=/home/pi/.fnm:$PATH
 
 [ -f ~/.bashrc.local ] && . ~/.bashrc.local
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).

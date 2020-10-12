@@ -26,9 +26,9 @@ set ignorecase
 
 " set mouse=a " Enable the mouse in all modes
 "
-if (has("termguicolors"))
-  set termguicolors " True colors for colorscheme
-endif
+" if (has("termguicolors"))
+"   set termguicolors " True colors for colorscheme
+" endif
 
 set background=dark
 " Mark 80th column
