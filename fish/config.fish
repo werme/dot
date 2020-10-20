@@ -37,3 +37,8 @@ set PATH ~/.bin $PATH
 alias clojure-lsp="~/.bin/clojure-lsp"
 
 [ -f ~/.fish.config.local ] && . ~/.fish.config.local
+
+set -x N_PREFIX "$HOME/n"
+if not contains "$N_PREFIX/bin" $PATH
+    set PATH $PATH "$N_PREFIX/bin"
+end
