@@ -36,6 +36,8 @@ set colorcolumn=80
 " lightline displays the mode already
 set noshowmode
 
+set hidden
+
 call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-sensible' " Sensible defaults
 Plug 'itchyny/lightline.vim' " Light configurable statusline
@@ -55,11 +57,15 @@ Plug 'editorconfig/editorconfig-vim' " Make vim read editorconfig files
 Plug 'tpope/vim-commentary' " Toggle comments
 Plug 'tpope/vim-fugitive' " Git
 Plug 'tpope/vim-unimpaired'
-Plug 'jiangmiao/auto-pairs' " Closes brackets etc, it's nice
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'rbong/vim-flog' " git branch viewer, integrates with fugitive
-Plug 'farmergreg/vim-lastplace' " Reopen files at previous cursor position
+" Plug 'jiangmiao/auto-pairs' " Closes brackets etc, it's nice
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/nvim-compe'
+Plug 'mhartington/formatter.nvim'
+" Plug 'rbong/vim-flog' " git branch viewer, integrates with fugitive
+" Plug 'farmergreg/vim-lastplace' " Reopen files at previous cursor position
 Plug 'christoomey/vim-tmux-navigator'
+
 call plug#end()
 
 syntax on
@@ -70,15 +76,129 @@ let g:javascript_plugin_flow = 1
 let g:closetag_filetypes = 'js,javascript.jsx'
 let g:closetag_filenames = '*.js'
 
-function! CocCurrentFunction()
-    return get(b:, 'coc_current_function', '')
-endfunction
+lua << EOF
+require'lspconfig'.tsserver.setup{
+  on_attach = function(client, bufnr)
+    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
-function! LightlineGitBlame() abort
-  let blame = get(b:, 'coc_git_blame', '')
-  return blame
-  " return winwidth(0) > 0 ? blame : ''
-endfunction
+    --Enable completion triggered by <c-x><c-o>
+    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+    -- Mappings.
+    local opts = { noremap=true, silent=true }
+
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+    buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+    buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+    buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+    buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+    buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+    buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+    buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+    buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+    buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+    buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+    buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+    --buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+    --buf_set_keymap("n", "<space>g", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+
+  end
+}
+
+vim.o.completeopt = "menuone,noselect"
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  resolve_timeout = 800;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = {
+    border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
+    winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+    max_width = 120,
+    min_width = 60,
+    max_height = math.floor(vim.o.lines * 0.3),
+    min_height = 1,
+  };
+
+  source = {
+    path = true;
+    buffer = true;
+    calc = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+    vsnip = true;
+    ultisnips = true;
+    luasnip = true;
+  };
+}
+
+require('formatter').setup({
+  logging = false,
+  filetype = {
+    javascript = {
+        -- prettier
+       function()
+          return {
+            exe = "prettierd",
+            args = {vim.api.nvim_buf_get_name(0)},
+            stdin = true
+          }
+        end
+    },
+    typescript = {
+        -- prettier
+       function()
+          return {
+            exe = "prettierd",
+            args = {vim.api.nvim_buf_get_name(0)},
+            stdin = true
+          }
+        end
+    },
+    lua = {
+        -- luafmt
+        function()
+          return {
+            exe = "luafmt",
+            args = {"--indent-count", 2, "--stdin"},
+            stdin = true
+          }
+        end
+    },
+  }
+})
+EOF
+
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+
+nnoremap <silent> <leader>g :Format<CR>
+
+" function! CocCurrentFunction()
+"     return get(b:, 'coc_current_function', '')
+" endfunction
+
+" function! LightlineGitBlame() abort
+"   let blame = get(b:, 'coc_git_blame', '')
+"   return blame
+"   " return winwidth(0) > 0 ? blame : ''
+" endfunction
 
 let g:lightline = {
       \ 'colorscheme': 'onedark'
@@ -107,20 +227,20 @@ command! Viminit :e $MYVIMRC
 
 command! Save :mks! ~/.vim/sessions/Prev.vim
 
-" command! -bang -nargs=* Rg
-"   \ call fzf#vim#grep(
-"   \   'rg --hidden --column --line-number --no-heading --smart-case '.shellescape(<q-args>),
-"   \   1,
-"   \   fzf#vim#with_preview(),
-"   \   <bang>0)
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --hidden --column --line-number --no-heading --smart-case '.shellescape(<q-args>),
+  \   1,
+  \   fzf#vim#with_preview(),
+  \   <bang>0)
 
-command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
-command! -nargs=0 EslintFix :call CocAction('runCommand', 'eslint.executeAutofix')
+" command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+" command! -nargs=0 EslintFix :call CocAction('runCommand', 'eslint.executeAutofix')
 
 let g:fzf_layout = { 'window': 'enew' }
 
 " Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
+" autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " map f <Plug>Sneak_s
 " map F <Plug>Sneak_S
@@ -157,9 +277,7 @@ noremap <silent> <Leader>j :Files<CR>
 " nmap <Leader>s :Lines<CR>
 noremap <silent> <Leader>f :Rg<CR>
 
-nmap <Leader>b :NERDTreeToggle<CR>
-
-nmap <silent> <Leader>g :Prettier<CR>
+" nmap <silent> <Leader>g :Prettier<CR>
 
 " Yank to *
 noremap Y "*y
@@ -169,14 +287,14 @@ nnoremap <CR> :noh<CR><CR>
 " Find and replace
 map <leader>sr :%s///g<left><left>
 
-nmap <silent> <Leader>[ <Plug>(coc-diagnostic-prev)
-nmap <silent> <Leader>] <Plug>(coc-diagnostic-next)
+" nmap <silent> <Leader>[ <Plug>(coc-diagnostic-prev)
+" nmap <silent> <Leader>] <Plug>(coc-diagnostic-next)
 
 " " Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+" nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gy <Plug>(coc-type-definition)
+" nmap <silent> gi <Plug>(coc-implementation)
+" nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -187,7 +305,7 @@ function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
   else
-    call CocAction('doHover')
+    " call CocAction('doHover')
   endif
 endfunction
 
@@ -205,16 +323,16 @@ function! s:check_back_space() abort
 endfunction
 
 " Remap for do codeAction of selected region
-function! s:cocActionsOpenFromSelected(type) abort
-  execute 'CocCommand actions.open ' . a:type
-endfunction
-xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
-nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
+" function! s:cocActionsOpenFromSelected(type) abort
+"   execute 'CocCommand actions.open ' . a:type
+" endfunction
+" xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
+" nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
 
 " Use CTRL-S for selections ranges.
 " Requires 'textDocument/ionRange' support of LS, ex: coc-tsserver
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
+" nmap <silent> <C-s> <Plug>(coc-range-select)
+" xmap <silent> <C-s> <Plug>(coc-range-select)
 
 " set viminfo+=!
 

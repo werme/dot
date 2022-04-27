@@ -1,8 +1,8 @@
 [user]
-  name = Olle Werme
-  email = olle.werme@gmail.com
+  name = olli
+  email = 1403501+werme@users.noreply.github.com
 [hub]
-  protocol = https
+	protocol = https
 [alias]
   a = add
   st = status
@@ -20,6 +20,7 @@
   brsort = for-each-ref --sort='authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
   
   amend = commit --amend --no-edit
+  wip = commit -m "wip"
 [color]
   diff = auto
   status = auto
@@ -27,7 +28,7 @@
   ui = true
 [core]
   excludesfile = ~/.gitignore_global
-  editor = nvim
+	editor = vi
 [apply]
   whitespace = fix
 [merge]
