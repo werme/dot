@@ -1,50 +1,67 @@
+# Path
+set PATH /usr/local/bin $PATH
+set PATH ~/.bin $PATH
 
-if not functions -q fisher
-    set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
-    curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
-    fish -c fisher
+# Editor defaults
+if set -q SSH_CONNECTION
+  set -x EDITOR "nvim"
+  set -x GIT_EDITOR "nvim"
+else
+  set -x EDITOR "zed"
+  set -x GIT_EDITOR "zed --wait"
 end
 
+# Command rewrites and arg defaults
+alias ls="eza -a --git-ignore -I '.git'"
+alias tree="eza --tree -a --git-ignore -I '.git'"
+# alias tmux="env TERM=screen-256color tmux -u"
+
+# Shortcuts
+alias v="$EDITOR"
 alias g="git"
 alias ..="cd .."
 alias ...="cd ../.."
-alias vim="nvim"
-alias v="nvim"
-alias j="z"
+alias lst="tree"
+alias l="tree"
 alias o="open"
-# alias ls="exa"
-# alias lst="exa --all --tree --ignore-glob='node_modules'"
-
-alias fishconfig="v ~/.config/fish/config.fish"
-alias vimconfig="v ~/.config/nvim/init.lua"
-alias tmuxconfig="v ~/.tmux.conf"
-alias alacrittyconfig="v ~/.config/alacritty.yml"
-alias tmux="env TERM=screen-256color tmux -u"
 alias tx="tmux"
-# alias emacs="env TERM=screen-256color emacs"
-# alias emacs="~/dev/emacs/nextstep/Emacs.app/Contents/MacOs/Emacs -nw"
-# alias em="emacs"
+alias lg="lazygit"
+alias c="claude"
+alias goo="goose"
+alias fv="fzf | xargs $EDITOR"
 
-set -x EDITOR "nvim"
-set -x FZF_DEFAULT_COMMAND "fd --hidden --exclude={.git,node_modules} --type f"
+# Quick config access
+alias fishconfig="$EDITOR ~/.config/fish/config.fish"
+alias vimconfig="$EDITOR ~/.config/nvim/init.lua"
+
+# Misc localization and timezone
 set -x LC_ALL "en_US.UTF-8"
 set -x LANG "en_US.UTF-8"
 set -x LANGUAGE "en_US.UTF-8"
 set -x TZ "Europe/Stockholm"
 
-set PATH ~/.bin $PATH
+# z
+set -U Z_CMD "j"
 
-alias clojure-lsp="~/.bin/clojure-lsp"
+# fzf
+set -x FZF_DEFAULT_COMMAND "fd --hidden --exclude={.git,node_modules} --type f"
 
-[ -f ~/.fish.config.local ] && . ~/.fish.config.local
-
-set -x N_PREFIX "$HOME/n"
-if not contains "$N_PREFIX/bin" $PATH
-    set PATH $PATH "$N_PREFIX/bin"
-end
-
-pyenv init - | source
-
+# fnm
 fnm env --use-on-cd | source
 
-set PATH $PATH "$HOME/.cargo/bin"
+# Docker
+[ -d "$HOME/.docker/bin" ] && set PATH $PATH "$HOME/.docker/bin"
+
+# pnpm
+set -gx PNPM_HOME "$HOME/Library/pnpm"
+[ -d "$PNPM_HOME" ] && set -gx PATH "$PNPM_HOME" $PATH
+
+# Bun
+set -x BUN_INSTALL "$HOME/.bun"
+[ -d "$BUN_INSTALL/bin" ] && set -x PATH $BUN_INSTALL/bin $PATH
+
+# Rust
+[ -d "$HOME/.cargo/bin" ] && set PATH $PATH "$HOME/.cargo/bin"
+
+# Local config
+[ -f ~/.fish.config.local ] &&source ~/.fish.config.local
