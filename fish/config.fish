@@ -1,6 +1,7 @@
 # Path
 set PATH /usr/local/bin $PATH
 set PATH ~/.bin $PATH
+set PATH ~/.local/bin $PATH
 
 # Editor defaults
 if set -q SSH_CONNECTION
