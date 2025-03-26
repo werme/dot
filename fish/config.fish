@@ -1,5 +1,6 @@
 # Path
 set PATH /usr/local/bin $PATH
+set PATH ~/bin $PATH
 set PATH ~/.bin $PATH
 set PATH ~/.local/bin $PATH
 
@@ -13,27 +14,30 @@ else
 end
 
 # Command rewrites and arg defaults
-alias ls="eza -a --git-ignore -I '.git'"
-alias tree="eza --tree -a --git-ignore -I '.git'"
-# alias tmux="env TERM=screen-256color tmux -u"
+alias ls="eza -a"
+alias tree="eza --tree -a -I '.git|node_modules'"
+alias tmux="env TERM=screen-256color tmux -u"
 
 # Shortcuts
 alias v="$EDITOR"
 alias g="git"
+alias nv="nvim"
 alias ..="cd .."
 alias ...="cd ../.."
 alias lst="tree"
 alias l="tree"
+alias jj="cd ~"
 alias o="open"
 alias tx="tmux"
 alias lg="lazygit"
 alias c="claude"
-alias goo="goose"
 alias fv="fzf | xargs $EDITOR"
+alias px="perplexity"
 
-# Quick config access
-alias fishconfig="$EDITOR ~/.config/fish/config.fish"
-alias vimconfig="$EDITOR ~/.config/nvim/init.lua"
+# Quick config access (single quotes needed to resolve env var lazily)
+alias fishconfig='$EDITOR ~/.config/fish/config.fish'
+alias vimconfig='$EDITOR ~/.config/nvim/init.lua'
+alias gitconfig='$EDITOR ~/.gitconfig'
 
 # Misc localization and timezone
 set -x LC_ALL "en_US.UTF-8"

@@ -14,12 +14,12 @@
   flip    = commit -m '(╯°□°)╯︵ ┻━┻'
   dab     = commit -m 'ㄥ(⸝ ، ⸍ )‾‾‾‾‾'
   noggles = commit -m '⌐◨-◨'
-  
+
   sl = log --decorate --color --abbrev-commit --all --pretty=oneline
-  l  = log --decorate --color --abbrev-commit --all --graph 
-  
+  l  = log --decorate --color --abbrev-commit --all --graph
+
   brsort = for-each-ref --sort='authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
-  
+
   amend = commit --amend --no-edit
   wip = commit -m "wip"
 	checkpoint = commit -m \"checkpoint: staged changes\"
@@ -31,10 +31,12 @@
 [core]
   excludesfile = ~/.gitignore_global
   editor = zed --wait # nvim
+	pager = diffr --colors refine-added:foreground:0xdd,0xdd,0xdd:background:0x33,0x88,0x44 --colors added:none:background:0x33,0x55,0x33 --colors refine-removed:none:background:0x99,0x33,0x33:bold --colors removed:none:background:0x55,0x33,0x33 | less -RFX
   # pager = delta
 [interactive]
   # diffFilter = delta --color-only # for delta?
 [diff]
+	algorithm = patience
   # colorMoved = default # for delta?
 [delta]
   navigate = true    # use n and N to move between diff sections
