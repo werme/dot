@@ -25,12 +25,14 @@ alias nv="nvim"
 alias ..="cd .."
 alias ...="cd ../.."
 alias lst="tree"
+alias glst="tree --git-ignore"
 alias l="tree"
 alias jj="cd ~"
 alias o="open"
 alias tx="tmux"
 alias lg="lazygit"
-alias c="claude"
+#alias c="claude"
+alias c="SHELL=/bin/bash claude"
 alias fv="fzf | xargs $EDITOR"
 alias px="perplexity"
 
@@ -38,6 +40,7 @@ alias px="perplexity"
 alias fishconfig='$EDITOR ~/.config/fish/config.fish'
 alias vimconfig='$EDITOR ~/.config/nvim/init.lua'
 alias gitconfig='$EDITOR ~/.gitconfig'
+alias tmuxconfig='$EDITOR ~/.tmux.conf'
 
 # Misc localization and timezone
 set -x LC_ALL "en_US.UTF-8"
