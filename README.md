@@ -2,6 +2,7 @@
 stow -R -t ~ git tmux
 stow -R -t ~/.config/fish fish
 stow -R -t ~/.config/nvim nvim
+stow -R --no-folding -t ~/bin bin
 ```
 
 Install

@@ -1,0 +1,21 @@
+#!/usr/bin/env fish
+
+# A script to display ANSI color codes with their names
+
+# Define color names for the first 16 colors (0-15)
+set color_names "black" "red" "green" "yellow" "blue" "magenta" "cyan" "white" \
+                "bright black" "bright red" "bright green" "bright yellow" \
+                "bright blue" "bright magenta" "bright cyan" "bright white"
+
+# Print colors with their names
+for i in (seq 0 15)
+    set name $color_names[(math $i + 1)]
+    # Format specifiers used:
+    # %-14s: String left-aligned, padded to 14 characters
+    # %dm: Decimal integer for the color code in the ANSI escape sequence
+    # %02d: Decimal integer zero-padded to 2 digits
+    printf "%-14s \e[38;5;%dm%02d\e[0m" "$name" $i $i
+    printf " \e[48;5;15;38;5;%dm%02d\e[0m" $i $i
+    printf " \e[48;5;%d;38;5;0m%02d\e[0m" $i $i
+    printf " \e[48;5;%d;38;5;15m%02d\e[0m\n" $i $i
+end

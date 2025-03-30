@@ -103,24 +103,11 @@ if is_tmux_session() then
 	local tmux_directions = { h = "L", j = "D", k = "U", l = "R" }
 
 	local function tmux_move(direction)
-		print("tmux_move called with direction: " .. direction)
 		local current_win = vim.api.nvim_get_current_win()
-		print("Current window ID: " .. current_win)
-
 		vim.cmd("wincmd " .. direction)
-		local new_win = vim.api.nvim_get_current_win()
-		print("New window ID after wincmd: " .. new_win)
-
 		if vim.api.nvim_get_current_win() == current_win then
-			print("Window didn't change, executing tmux command: tmux selectp -" .. tmux_directions[direction])
-			local result = vim.fn.system("tmux selectp -" .. tmux_directions[direction])
-			if result ~= "" then
-				print("tmux command result: " .. result)
-			else
-				print("tmux command executed successfully")
-			end
-		else
-			print("Window changed, staying in Neovim")
+			-- Window didn't change, switching tmux pane
+			vim.fn.system("tmux selectp -" .. tmux_directions[direction])
 		end
 	end
 

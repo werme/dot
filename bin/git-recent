@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Get git branches with formatted output
+git for-each-ref --sort=committerdate refs/heads/ --format="%(refname:short) | %(contents:subject) | %(authorname) | %(committerdate:relative)" | tail -n 20 | awk '{
+  split($0, arr, " \\| ");
+  branch=arr[1]; 
+  msg=arr[2]; 
+  author=arr[3];
+  rel_time=arr[4];
+  
+  # Convert relative time to shorter format
+  if (rel_time ~ /seconds? ago/) { 
+    short_time = "now"; 
+  } else if (rel_time ~ /minutes? ago/) { 
+    split(rel_time, rt, " ");
+    short_time = rt[1] "m";
+  } else if (rel_time ~ /hours? ago/) { 
+    split(rel_time, rt, " ");
+    short_time = rt[1] "h";
+  } else if (rel_time ~ /days? ago/) { 
+    split(rel_time, rt, " ");
+    short_time = rt[1] "d";
+  } else if (rel_time ~ /weeks? ago/) { 
+    split(rel_time, rt, " ");
+    short_time = rt[1] "w";
+  } else if (rel_time ~ /months? ago/) { 
+    split(rel_time, rt, " ");
+    short_time = rt[1] "mo";
+  } else if (rel_time ~ /years? ago/) { 
+    split(rel_time, rt, " ");
+    short_time = rt[1] "y";
+  } else { 
+    short_time = rel_time; 
+  }
+  
+  if(length(msg)>30) msg=substr(msg,1,30)"...";
+  if(length(author)>15) author=substr(author,1,15)"...";
+  # Format the timestamp first, then the branch name
+  printf "\033[0;36m%-4s\033[0m \033[0;33m%-20s\033[0m \033[0;32m%-33s\033[0m \033[0;35m%s\033[0m\n", short_time, branch, msg, author;
+}'
