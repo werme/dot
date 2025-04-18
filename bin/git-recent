@@ -1,40 +1,48 @@
 #!/bin/bash
 
-# Get git branches with formatted output
-git for-each-ref --sort=committerdate refs/heads/ --format="%(refname:short) | %(contents:subject) | %(authorname) | %(committerdate:relative)" | tail -n 20 | awk '{
-  split($0, arr, " \\| ");
-  branch=arr[1]; 
-  msg=arr[2]; 
-  author=arr[3];
-  rel_time=arr[4];
-  
+# Generate a list of branches with formatted display and store branch names separately
+branches=()
+display_lines=()
+
+# Get branches sorted by most recent commit
+while IFS='|' read -r branch msg author rel_time; do
   # Convert relative time to shorter format
-  if (rel_time ~ /seconds? ago/) { 
-    short_time = "now"; 
-  } else if (rel_time ~ /minutes? ago/) { 
-    split(rel_time, rt, " ");
-    short_time = rt[1] "m";
-  } else if (rel_time ~ /hours? ago/) { 
-    split(rel_time, rt, " ");
-    short_time = rt[1] "h";
-  } else if (rel_time ~ /days? ago/) { 
-    split(rel_time, rt, " ");
-    short_time = rt[1] "d";
-  } else if (rel_time ~ /weeks? ago/) { 
-    split(rel_time, rt, " ");
-    short_time = rt[1] "w";
-  } else if (rel_time ~ /months? ago/) { 
-    split(rel_time, rt, " ");
-    short_time = rt[1] "mo";
-  } else if (rel_time ~ /years? ago/) { 
-    split(rel_time, rt, " ");
-    short_time = rt[1] "y";
-  } else { 
-    short_time = rel_time; 
-  }
+  if [[ $rel_time =~ seconds?\ ago ]]; then
+    short_time="now"
+  elif [[ $rel_time =~ ([0-9]+)\ minutes?\ ago ]]; then
+    short_time="${BASH_REMATCH[1]}m"
+  elif [[ $rel_time =~ ([0-9]+)\ hours?\ ago ]]; then
+    short_time="${BASH_REMATCH[1]}h"
+  elif [[ $rel_time =~ ([0-9]+)\ days?\ ago ]]; then
+    short_time="${BASH_REMATCH[1]}d"
+  elif [[ $rel_time =~ ([0-9]+)\ weeks?\ ago ]]; then
+    short_time="${BASH_REMATCH[1]}w"
+  elif [[ $rel_time =~ ([0-9]+)\ months?\ ago ]]; then
+    short_time="${BASH_REMATCH[1]}mo"
+  elif [[ $rel_time =~ ([0-9]+)\ years?\ ago ]]; then
+    short_time="${BASH_REMATCH[1]}y"
+  else
+    short_time="$rel_time"
+  fi
   
-  if(length(msg)>30) msg=substr(msg,1,30)"...";
-  if(length(author)>15) author=substr(author,1,15)"...";
-  # Format the timestamp first, then the branch name
-  printf "\033[0;36m%-4s\033[0m \033[0;33m%-20s\033[0m \033[0;32m%-33s\033[0m \033[0;35m%s\033[0m\n", short_time, branch, msg, author;
-}'
+  # Store branch name and its display line (only time and branch name)
+  branches+=("$branch")
+  display_lines+=("$(printf "%-4s   %-30s" "$short_time" "$branch")")
+done < <(git for-each-ref --sort=-committerdate refs/heads/ --format="%(refname:short)|%(contents:subject)|%(authorname)|%(committerdate:relative)" | head -n 20)
+
+# Join display lines with newlines
+formatted_output=$(printf "%s\n" "${display_lines[@]}")
+
+# Use gum choose to select a branch
+selected_line=$(echo "$formatted_output" | gum choose --selected=0)
+
+if [ -n "$selected_line" ]; then
+  # Find the index of the selected line
+  for i in "${!display_lines[@]}"; do
+    if [ "${display_lines[$i]}" = "$selected_line" ]; then
+      # Checkout the corresponding branch
+      git checkout "${branches[$i]}"
+      break
+    fi
+  done
+fi
