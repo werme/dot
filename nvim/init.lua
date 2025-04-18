@@ -1,7 +1,5 @@
--- Check if you're in an SSH session
-local function is_ssh_session()
-	-- Check for SSH_CLIENT or SSH_TTY environment variables
-	return (vim.env.SSH_CLIENT ~= nil) or (vim.env.SSH_TTY ~= nil)
+local function is_desktop()
+	return vim.env.GUI == "1"
 end
 
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -9,7 +7,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " " -- See `:help maplocalleader`
 
 -- Convenience for plugin configuration
-vim.g.have_nerd_font = not is_ssh_session()
+vim.g.have_nerd_font = true -- is_desktop()
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -734,7 +732,8 @@ require("lazy").setup({
 				-- python = { "isort", "black" },
 				--
 				-- You can use 'stop_after_first' to run the first available formatter from the list
-				-- javascript = { "prettierd", "prettier", stop_after_first = true },
+				javascript = { "prettierd", "prettier", stop_after_first = true },
+				typescriptreact = { "prettierd", "prettier", stop_after_first = true },
 			},
 		},
 	},
@@ -975,9 +974,12 @@ require("lazy").setup({
 				enable_claude_text_editor_tool_mode = true,
 			},
 			windows = {
-				position = is_ssh_session() and "bottom" or "right", -- the position of the sidebar
+				position = is_desktop() and "right" or "bottom", -- the position of the sidebar
 				width = 50, -- %
 				height = 100,
+				input = {
+					height = 5,
+				},
 				ask = {
 					start_insert = false, -- Start insert mode when opening the ask window
 				},

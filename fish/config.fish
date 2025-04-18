@@ -4,13 +4,20 @@ set PATH ~/bin $PATH
 set PATH ~/.bin $PATH
 set PATH ~/.local/bin $PATH
 
+set -x GUI 1  # Default value
+if set -q TMUX && test (tmux display -p "#{window_width}") -lt 100
+    set -x GUI 0
+else if not set -q TMUX && set -q SSH_CONNECTION
+    set -x GUI 0
+end
+
 # Editor defaults
-if set -q SSH_CONNECTION
-  set -x EDITOR "nvim"
-  set -x GIT_EDITOR "nvim"
-else
+if test "$GUI" = "1"
   set -x EDITOR "zed"
   set -x GIT_EDITOR "zed --wait"
+else
+  set -x EDITOR "nvim"
+  set -x GIT_EDITOR "nvim"
 end
 
 # Command rewrites and arg defaults
@@ -31,9 +38,10 @@ alias jj="cd ~"
 alias o="open"
 alias tx="tmux"
 alias lg="lazygit"
-#alias c="claude"
 alias c="SHELL=/bin/bash claude"
+alias co="OPENAI_API_KEY=$OPENAI_API_KEY___ZED codex"
 alias fv="fzf | xargs $EDITOR"
+alias ai="aichat"
 alias px="perplexity"
 
 # Quick config access (single quotes needed to resolve env var lazily)
